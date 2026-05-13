@@ -1,8 +1,11 @@
 import type {Metadata} from 'next';
+import {Analytics} from '@vercel/analytics/react';
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
 import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
+import {Suspense} from 'react';
 
+import {AnalyticsEvents} from '@/components/analytics/AnalyticsEvents';
 import {Footer} from '@/components/layout/Footer';
 import {Header} from '@/components/layout/Header';
 import {routing, type Locale} from '@/i18n/routing';
@@ -61,6 +64,10 @@ export default async function LocaleLayout({
             </main>
             <Footer locale={typedLocale} />
           </div>
+          <Suspense fallback={null}>
+            <AnalyticsEvents />
+          </Suspense>
+          <Analytics />
         </NextIntlClientProvider>
       </body>
     </html>

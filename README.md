@@ -12,6 +12,12 @@ Primary locale: Hebrew (`/he`)
 
 Secondary locale: English (`/en`)
 
+## Operations
+
+- Deployment: see [DEPLOYMENT.md](./DEPLOYMENT.md)
+- Launch QA: see [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md)
+- Analytics and monitoring: see [MONITORING.md](./MONITORING.md)
+
 ## YouTube Metadata Import
 
 The importer uses YouTube Data API v3 and stores metadata only. It does not
