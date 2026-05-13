@@ -40,10 +40,13 @@ NEXT_PUBLIC_SITE_URL
 Run locally after setting `YOUTUBE_API_KEY`:
 
 ```bash
-npm run import:youtube
+npm run update:youtube
 npm run validate:content
 ```
 
 Commit the updated `data/youtube-videos.json` and push to GitHub. Vercel will
 redeploy automatically on push, or you can trigger **Redeploy** from the Vercel
 dashboard.
+
+For the first full import, use `npm run import:youtube`. For ongoing refreshes,
+prefer `npm run update:youtube`.

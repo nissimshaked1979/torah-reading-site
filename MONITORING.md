@@ -80,7 +80,7 @@ If a video page loads but the iframe fails:
 
 - Check Vercel Analytics for top pages and searches.
 - Review Vercel Runtime Logs for errors.
-- Run `npm run import:youtube` if new videos were uploaded.
+- Run `npm run update:youtube` if new videos were uploaded.
 - Review `data/manual-overrides.json` for title/parasha corrections.
 - Run `npm run validate:content`.
 - Run `npm run build`.

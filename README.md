@@ -47,6 +47,12 @@ $env:YOUTUBE_API_KEY="your_api_key_here"
 npm run import:youtube
 ```
 
+For routine refreshes after the first import, run:
+
+```bash
+npm run update:youtube
+```
+
 The script resolves `@nissimshaked`, reads the uploads playlist, fetches all
 public videos with pagination, and saves embed-ready metadata to:
 
@@ -65,6 +71,33 @@ Overrides are applied after automatic classification and support `category`,
 `nusach`, `displayOrder`, `featured`, and `hidden`.
 
 Embeds should use `https://www.youtube.com/embed/{videoId}` without autoplay.
+
+## Refreshing YouTube Content
+
+Use `npm run update:youtube` for ongoing updates. It re-fetches channel metadata,
+updates existing videos by `videoId`, appends new videos, avoids duplicates, and
+keeps manual curation in `data/manual-overrides.json` separate.
+
+Suggested cadence: daily while the channel is active, or weekly for lighter
+maintenance.
+
+After refreshing:
+
+```bash
+npm run validate:content
+npm run build
+git add data/youtube-videos.json data/manual-overrides.json
+git commit -m "Update YouTube metadata"
+git push
+```
+
+Automation options:
+
+- Vercel Cron: create a scheduled route or job that runs daily and triggers the
+  metadata update workflow in your deployment process.
+- GitHub Actions: add a scheduled workflow with `cron: "0 3 * * *"` that runs
+  `npm install`, `npm run update:youtube`, `npm run validate:content`, and opens
+  a PR with changed metadata.
 
 ## Manual Curation
 

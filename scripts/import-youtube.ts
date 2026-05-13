@@ -75,7 +75,7 @@ type YouTubeListResponse<T> = {
   };
 };
 
-type ImportedVideo = {
+export type ImportedVideo = {
   videoId: string;
   title: {
     source: string;
@@ -262,7 +262,7 @@ async function fetchJson<T>(url: URL, attempt = 1): Promise<T> {
   );
 }
 
-async function resolveUploadsPlaylistId(apiKey: string): Promise<string> {
+export async function resolveUploadsPlaylistId(apiKey: string): Promise<string> {
   const url = buildUrl('channels', {
     part: 'contentDetails',
     forHandle: CHANNEL_HANDLE,
@@ -287,7 +287,7 @@ async function resolveUploadsPlaylistId(apiKey: string): Promise<string> {
   return uploadsPlaylistId;
 }
 
-async function fetchAllPlaylistVideoIds(
+export async function fetchAllPlaylistVideoIds(
   apiKey: string,
   playlistId: string
 ): Promise<string[]> {
@@ -317,7 +317,7 @@ async function fetchAllPlaylistVideoIds(
   return [...new Set(videoIds)];
 }
 
-async function fetchVideoDetails(
+export async function fetchVideoDetails(
   apiKey: string,
   videoIds: string[]
 ): Promise<VideoResource[]> {
@@ -338,7 +338,7 @@ async function fetchVideoDetails(
   return videos;
 }
 
-async function readManualOverrides(): Promise<ManualOverridesFile> {
+export async function readManualOverrides(): Promise<ManualOverridesFile> {
   try {
     const raw = await readFile(OVERRIDES_PATH, 'utf8');
     return JSON.parse(raw) as ManualOverridesFile;
@@ -400,7 +400,7 @@ function defaultTags(category: CategoryId, parashaSlug: string | null): string[]
   return [...new Set(tags)];
 }
 
-function toImportedVideo(
+export function toImportedVideo(
   video: VideoResource,
   overrides: Record<string, ManualOverride>
 ): ImportedVideo {
@@ -448,7 +448,7 @@ function toImportedVideo(
   };
 }
 
-function logClassificationCounts(videos: ImportedVideo[]) {
+export function logClassificationCounts(videos: ImportedVideo[]) {
   const counts = videos.reduce<Record<string, number>>((accumulator, video) => {
     accumulator[video.category] = (accumulator[video.category] ?? 0) + 1;
     return accumulator;
@@ -460,7 +460,7 @@ function logClassificationCounts(videos: ImportedVideo[]) {
   }
 }
 
-async function main() {
+export async function importYouTubeVideos(): Promise<ImportedVideo[]> {
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   if (!apiKey) {
@@ -496,9 +496,13 @@ async function main() {
   console.log(`Saved metadata to ${OUTPUT_PATH}.`);
   console.log(`Videos fetched: ${importedVideos.length}`);
   logClassificationCounts(importedVideos);
+
+  return importedVideos;
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exitCode = 1;
-});
+if (process.argv[1]?.endsWith('import-youtube.ts')) {
+  importYouTubeVideos().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  });
+}
