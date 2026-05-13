@@ -6,6 +6,7 @@ import {PageShell} from '@/components/layout/PageShell';
 import {Link} from '@/i18n/navigation';
 import type {Locale} from '@/i18n/routing';
 import {getParashaBySlug, parashot} from '@/lib/content/repository';
+import {decodeRouteSegment} from '@/lib/routing/segments';
 import {JsonLd, buildBreadcrumbJsonLd} from '@/lib/seo/jsonld';
 import {buildLocalizedMetadata} from '@/lib/seo/metadata';
 import {getVideosByParasha} from '@/lib/youtube/repository';
@@ -21,8 +22,9 @@ export async function generateMetadata({
   params
 }: ParashaPageProps): Promise<Metadata> {
   const {locale, slug} = await params;
-  const parasha = getParashaBySlug(slug);
-  const title = parasha?.title[locale] ?? slug;
+  const decodedSlug = decodeRouteSegment(slug);
+  const parasha = getParashaBySlug(decodedSlug);
+  const title = parasha?.title[locale] ?? decodedSlug;
   const description = parasha
     ? locale === 'he'
       ? `קריאת התורה לפרשת ${title}, טעמי המקרא ונוסח ספרדי ירושלמי. ${parasha.torahReference}`
@@ -50,10 +52,11 @@ export async function generateMetadata({
 
 export default async function ParashaPage({params}: ParashaPageProps) {
   const {locale, slug} = await params;
+  const decodedSlug = decodeRouteSegment(slug);
   setRequestLocale(locale);
 
   const t = await getTranslations({locale, namespace: 'ParashaPage'});
-  const parasha = getParashaBySlug(slug);
+  const parasha = getParashaBySlug(decodedSlug);
   const videos = parasha ? getVideosByParasha(parasha.slug.en) : [];
   const orderedParashot = parashot
     .filter((item) => !item.combines)
@@ -75,7 +78,7 @@ export default async function ParashaPage({params}: ParashaPageProps) {
       description={
         parasha
           ? `${parasha.book[locale]} · ${parasha.torahReference}`
-          : t('description', {slug})
+          : t('description', {slug: decodedSlug})
       }
     >
       <JsonLd
@@ -86,8 +89,8 @@ export default async function ParashaPage({params}: ParashaPageProps) {
             path: '/category/parashat-hashavua'
           },
           {
-            name: parasha?.title[locale] ?? slug,
-            path: `/parasha/${parasha?.slug[locale] ?? slug}`
+            name: parasha?.title[locale] ?? decodedSlug,
+            path: `/parasha/${parasha?.slug[locale] ?? decodedSlug}`
           }
         ])}
       />

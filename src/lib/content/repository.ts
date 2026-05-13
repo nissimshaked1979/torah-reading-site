@@ -3,6 +3,7 @@ import type {Locale} from '@/i18n/routing';
 import {categories, contentItems, tags} from '../../../data/content';
 import {parashot} from '../../../data/parashot';
 import type {CategoryId, ContentItem, Parasha} from './types';
+import {decodeRouteSegment} from '../routing/segments';
 
 export {categories, contentItems, parashot, tags};
 
@@ -14,25 +15,32 @@ export function getContentBySlug(
   slug: string,
   locale: Locale
 ): ContentItem | undefined {
-  return getAllContent().find((item) => item.slug[locale] === slug);
+  const decodedSlug = decodeRouteSegment(slug);
+
+  return getAllContent().find((item) => item.slug[locale] === decodedSlug);
 }
 
 export function getContentByCategory(category: CategoryId | string): ContentItem[] {
+  const decodedCategory = decodeRouteSegment(category);
   const categoryId =
     categories.find(
       (item) =>
-        item.id === category ||
-        item.slug.he === category ||
-        item.slug.en === category
-    )?.id ?? category;
+        item.id === decodedCategory ||
+        item.slug.he === decodedCategory ||
+        item.slug.en === decodedCategory
+    )?.id ?? decodedCategory;
 
   return getAllContent().filter((item) => item.categoryId === categoryId);
 }
 
 export function getParashaBySlug(slug: string): Parasha | undefined {
+  const decodedSlug = decodeRouteSegment(slug);
+
   return parashot.find(
     (parasha) =>
-      parasha.id === slug || parasha.slug.he === slug || parasha.slug.en === slug
+      parasha.id === decodedSlug ||
+      parasha.slug.he === decodedSlug ||
+      parasha.slug.en === decodedSlug
   );
 }
 

@@ -5,6 +5,7 @@ import {VideoGrid} from '@/components/content/VideoGrid';
 import {PageShell} from '@/components/layout/PageShell';
 import type {Locale} from '@/i18n/routing';
 import {categories} from '@/lib/content/repository';
+import {decodeRouteSegment} from '@/lib/routing/segments';
 import {JsonLd, buildBreadcrumbJsonLd} from '@/lib/seo/jsonld';
 import {buildLocalizedMetadata} from '@/lib/seo/metadata';
 import {getVideosByCategory} from '@/lib/youtube/repository';
@@ -20,8 +21,12 @@ export async function generateMetadata({
   params
 }: CategoryPageProps): Promise<Metadata> {
   const {locale, slug} = await params;
+  const decodedSlug = decodeRouteSegment(slug);
   const category = categories.find(
-    (item) => item.id === slug || item.slug.he === slug || item.slug.en === slug
+    (item) =>
+      item.id === decodedSlug ||
+      item.slug.he === decodedSlug ||
+      item.slug.en === decodedSlug
   );
   const title =
     category?.title[locale] ??
@@ -51,11 +56,15 @@ export async function generateMetadata({
 
 export default async function CategoryPage({params}: CategoryPageProps) {
   const {locale, slug} = await params;
+  const decodedSlug = decodeRouteSegment(slug);
   setRequestLocale(locale);
 
   const t = await getTranslations({locale, namespace: 'CategoryPage'});
   const category = categories.find(
-    (item) => item.id === slug || item.slug.he === slug || item.slug.en === slug
+    (item) =>
+      item.id === decodedSlug ||
+      item.slug.he === decodedSlug ||
+      item.slug.en === decodedSlug
   );
   const videos = category ? getVideosByCategory(category.id) : [];
 
@@ -63,14 +72,16 @@ export default async function CategoryPage({params}: CategoryPageProps) {
     <PageShell
       eyebrow={t('eyebrow')}
       title={category?.title[locale] ?? t('title')}
-      description={category?.description?.[locale] ?? t('description', {slug})}
+      description={
+        category?.description?.[locale] ?? t('description', {slug: decodedSlug})
+      }
     >
       <JsonLd
         data={buildBreadcrumbJsonLd(locale, [
           {name: locale === 'he' ? 'בית' : 'Home', path: '/'},
           {
-            name: category?.title[locale] ?? slug,
-            path: `/category/${category?.slug[locale] ?? slug}`
+            name: category?.title[locale] ?? decodedSlug,
+            path: `/category/${category?.slug[locale] ?? decodedSlug}`
           }
         ])}
       />

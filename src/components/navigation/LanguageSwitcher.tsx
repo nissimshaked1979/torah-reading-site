@@ -4,6 +4,9 @@ import {useLocale} from 'next-intl';
 
 import type {Locale} from '@/i18n/routing';
 import {Link, usePathname} from '@/i18n/navigation';
+import {categories} from '../../../data/content';
+import {parashot} from '../../../data/parashot';
+import {decodeRouteSegment} from '@/lib/routing/segments';
 
 type LanguageSwitcherProps = {
   label: string;
@@ -31,7 +34,7 @@ export function LanguageSwitcher({label}: LanguageSwitcherProps) {
                 ? 'rounded-md bg-amber-100 px-3 py-2 font-bold text-amber-950'
                 : 'rounded-md px-3 py-2 font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950'
             }
-            href={pathname}
+            href={getLocalizedPathname(pathname, option.locale)}
             key={option.locale}
             locale={option.locale}
           >
@@ -41,4 +44,35 @@ export function LanguageSwitcher({label}: LanguageSwitcherProps) {
       })}
     </nav>
   );
+}
+
+function getLocalizedPathname(pathname: string, locale: Locale): string {
+  const segments = pathname.split('/').filter(Boolean);
+  const [section, slug] = segments;
+
+  if (section === 'category' && slug) {
+    const decodedSlug = decodeRouteSegment(slug);
+    const category = categories.find(
+      (item) =>
+        item.id === decodedSlug ||
+        item.slug.he === decodedSlug ||
+        item.slug.en === decodedSlug
+    );
+
+    return category ? `/category/${category.slug[locale]}` : pathname;
+  }
+
+  if (section === 'parasha' && slug) {
+    const decodedSlug = decodeRouteSegment(slug);
+    const parasha = parashot.find(
+      (item) =>
+        item.id === decodedSlug ||
+        item.slug.he === decodedSlug ||
+        item.slug.en === decodedSlug
+    );
+
+    return parasha ? `/parasha/${parasha.slug[locale]}` : pathname;
+  }
+
+  return pathname;
 }
