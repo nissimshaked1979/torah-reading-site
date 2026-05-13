@@ -10,6 +10,7 @@ import {
   toImportedVideo,
   type ImportedVideo
 } from './import-youtube.ts';
+import {loadLocalEnv} from './load-local-env.ts';
 
 const OUTPUT_PATH = path.join(process.cwd(), 'data', 'youtube-videos.json');
 const CURATION_FIELDS = [
@@ -88,6 +89,8 @@ function sortVideos(videos: ImportedVideo[]): ImportedVideo[] {
 }
 
 async function updateYouTubeVideos() {
+  loadLocalEnv();
+
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   if (!apiKey) {

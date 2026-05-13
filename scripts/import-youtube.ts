@@ -1,6 +1,8 @@
 import {readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 
+import {loadLocalEnv} from './load-local-env.ts';
+
 const API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const CHANNEL_HANDLE = 'nissimshaked';
 const OUTPUT_PATH = path.join(process.cwd(), 'data', 'youtube-videos.json');
@@ -461,6 +463,8 @@ export function logClassificationCounts(videos: ImportedVideo[]) {
 }
 
 export async function importYouTubeVideos(): Promise<ImportedVideo[]> {
+  loadLocalEnv();
+
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   if (!apiKey) {
