@@ -1,0 +1,22 @@
+{
+  "videos": {
+    "VIDEO_ID_HERE": {
+      "category": "other",
+      "subcategory": null,
+      "title": {
+        "he": "כותרת ידנית בעברית",
+        "en": "Manual English title"
+      },
+      "slug": {
+        "he": "כותרת-ידנית",
+        "en": "manual-english-title"
+      },
+      "parashaSlug": null,
+      "tags": ["example"],
+      "nusach": "sephardic-yerushalmi",
+      "displayOrder": 100,
+      "featured": false,
+      "hidden": false
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "Site": {
+    "name": "Nissim Shaked",
+    "tagline": "Torah readings, Tehillim, and prayers in Sephardic Yerushalmi nusach"
+  },
+  "Navigation": {
+    "home": "Home",
+    "parasha": "Parasha",
+    "categories": "Categories",
+    "search": "Search",
+    "searchPlaceholder": "Search readings, parashot, and prayers"
+  },
+  "HomePage": {
+    "eyebrow": "Site foundation",
+    "title": "Jewish Reading Library",
+    "description": "Torah readings, Weekly Parasha, Tehillim, Shir Hashirim, and prayers in Sephardic Yerushalmi nusach."
+  },
+  "ParashaPage": {
+    "eyebrow": "Weekly portion",
+    "title": "Parasha Page",
+    "description": "Temporary page for parasha: {slug}"
+  },
+  "CategoryPage": {
+    "eyebrow": "Category",
+    "title": "Category Page",
+    "description": "Temporary page for category: {slug}"
+  },
+  "SearchPage": {
+    "eyebrow": "Search",
+    "title": "Site Search",
+    "description": "Temporary search page for the content library."
+  },
+  "Footer": {
+    "copyright": "All rights reserved."
+  },
+  "Components": {
+    "language": "Language",
+    "searchButton": "Search",
+    "watch": "Watch",
+    "openCategory": "Open category"
+  }
+}

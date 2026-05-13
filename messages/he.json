@@ -1,0 +1,42 @@
+{
+  "Site": {
+    "name": "ניסים שקד",
+    "tagline": "קריאות תורה, תהילים ותפילות בנוסח ספרדי ירושלמי"
+  },
+  "Navigation": {
+    "home": "בית",
+    "parasha": "פרשה",
+    "categories": "קטגוריות",
+    "search": "חיפוש",
+    "searchPlaceholder": "חיפוש קריאות, פרשות ותפילות"
+  },
+  "HomePage": {
+    "eyebrow": "יסודות האתר",
+    "title": "ספריית קריאה יהודית",
+    "description": "קריאות תורה, פרשת השבוע, תהילים, שיר השירים ותפילות בנוסח ספרדי ירושלמי."
+  },
+  "ParashaPage": {
+    "eyebrow": "פרשת השבוע",
+    "title": "עמוד פרשה",
+    "description": "עמוד זמני לפרשה: {slug}"
+  },
+  "CategoryPage": {
+    "eyebrow": "קטגוריה",
+    "title": "עמוד קטגוריה",
+    "description": "עמוד זמני לקטגוריה: {slug}"
+  },
+  "SearchPage": {
+    "eyebrow": "חיפוש",
+    "title": "חיפוש באתר",
+    "description": "עמוד זמני לחיפוש בתוכן האתר."
+  },
+  "Footer": {
+    "copyright": "כל הזכויות שמורות."
+  },
+  "Components": {
+    "language": "שפה",
+    "searchButton": "חפש",
+    "watch": "צפייה",
+    "openCategory": "פתיחת קטגוריה"
+  }
+}
