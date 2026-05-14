@@ -156,9 +156,14 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'shema'
   ],
   haftarot: [
+    'הפטרת פרשת',
     'הפטרה',
     'הפטרת',
     'הפטרות',
+    'haftarat parashat',
+    'haftarat parsha',
+    'haftarah parashat',
+    'haftarah parsha',
     'haftara',
     'haftarah',
     'haftarot',
