@@ -62,5 +62,9 @@ export function VideoCard({
     return content;
   }
 
-  return <Link href={resolvedHref}>{content}</Link>;
+  return (
+    <Link href={resolvedHref} locale={locale}>
+      {content}
+    </Link>
+  );
 }

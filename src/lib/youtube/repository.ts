@@ -47,6 +47,17 @@ export function getVideoById(videoId: string): YouTubeVideo | undefined {
   return getAllVideos().find((video) => video.videoId === videoId);
 }
 
+export function getVideoByIdentifier(identifier: string): YouTubeVideo | undefined {
+  const decodedIdentifier = decodeURIComponent(identifier);
+
+  return getAllVideos().find(
+    (video) =>
+      video.videoId === decodedIdentifier ||
+      video.slug?.he === decodedIdentifier ||
+      video.slug?.en === decodedIdentifier
+  );
+}
+
 export function getRelatedVideos(video: YouTubeVideo): YouTubeVideo[] {
   const tags = new Set(video.tags);
 

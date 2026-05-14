@@ -13,7 +13,7 @@ import {
   getAllVideos,
   getBestThumbnail,
   getRelatedVideos,
-  getVideoById
+  getVideoByIdentifier
 } from '@/lib/youtube/repository';
 
 type VideoPageProps = {
@@ -24,17 +24,25 @@ type VideoPageProps = {
 };
 
 export function generateStaticParams() {
-  return getAllVideos().flatMap((video) => [
-    {locale: 'he', videoId: video.videoId},
-    {locale: 'en', videoId: video.videoId}
-  ]);
+  return getAllVideos().flatMap((video) => {
+    const identifiers = [
+      video.videoId,
+      video.slug?.he,
+      video.slug?.en
+    ].filter(Boolean) as string[];
+
+    return identifiers.flatMap((videoId) => [
+      {locale: 'he', videoId},
+      {locale: 'en', videoId}
+    ]);
+  });
 }
 
 export async function generateMetadata({
   params
 }: VideoPageProps): Promise<Metadata> {
   const {locale, videoId} = await params;
-  const video = getVideoById(videoId);
+  const video = getVideoByIdentifier(videoId);
 
   if (!video) {
     return buildLocalizedMetadata({
@@ -72,7 +80,7 @@ export default async function VideoPage({params}: VideoPageProps) {
   const {locale, videoId} = await params;
   setRequestLocale(locale);
 
-  const video = getVideoById(videoId);
+  const video = getVideoByIdentifier(videoId);
 
   if (!video) {
     notFound();
