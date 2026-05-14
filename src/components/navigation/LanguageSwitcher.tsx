@@ -5,7 +5,7 @@ import {useLocale} from 'next-intl';
 import type {Locale} from '@/i18n/routing';
 import {Link, usePathname} from '@/i18n/navigation';
 import {categories} from '../../../data/content';
-import {parashot} from '../../../data/parashot';
+import {routableParashot} from '../../../data/parashot';
 import {decodeRouteSegment} from '@/lib/routing/segments';
 
 type LanguageSwitcherProps = {
@@ -64,7 +64,7 @@ function getLocalizedPathname(pathname: string, locale: Locale): string {
 
   if (section === 'parasha' && slug) {
     const decodedSlug = decodeRouteSegment(slug);
-    const parasha = parashot.find(
+    const parasha = routableParashot.find(
       (item) =>
         item.id === decodedSlug ||
         item.slug.he === decodedSlug ||

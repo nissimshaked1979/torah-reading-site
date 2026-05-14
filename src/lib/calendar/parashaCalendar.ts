@@ -20,7 +20,6 @@ const knownIsraelAnchor = {
 };
 
 const cycleParashot = parashot
-  .filter((parasha) => !parasha.combines)
   .sort((a, b) => a.order - b.order);
 
 const internalCalendarProvider: CalendarProvider = {

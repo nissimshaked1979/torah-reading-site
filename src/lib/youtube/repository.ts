@@ -1,5 +1,6 @@
 import youtubeVideosJson from '../../../data/youtube-videos.json';
 import manualOverridesJson from '../../../data/manual-overrides.json';
+import {getParashaBySlug} from '@/lib/content/repository';
 import type {ManualOverridesFile, YouTubeVideo} from './types';
 
 const youtubeVideos = youtubeVideosJson as YouTubeVideo[];
@@ -17,7 +18,21 @@ export function getVideosByCategory(category: string): YouTubeVideo[] {
 }
 
 export function getVideosByParasha(parashaSlug: string): YouTubeVideo[] {
-  return getAllVideos().filter((video) => video.parashaSlug === parashaSlug);
+  const parasha = getParashaBySlug(parashaSlug);
+  const slugs = new Set(
+    parasha
+      ? [
+          parasha.id,
+          parasha.slug.he,
+          parasha.slug.en,
+          ...(parasha.combinedParashaIds ?? [])
+        ]
+      : [parashaSlug]
+  );
+
+  return getAllVideos().filter(
+    (video) => video.parashaSlug && slugs.has(video.parashaSlug)
+  );
 }
 
 export function getLatestVideos(limit: number): YouTubeVideo[] {

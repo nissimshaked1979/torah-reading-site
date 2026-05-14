@@ -170,7 +170,7 @@ const parashaSlugKeywords: Array<{slug: string; keywords: string[]}> = [
   {slug: 'vayera', keywords: ['וירא', 'vayera']},
   {slug: 'chayei-sarah', keywords: ['חיי שרה', 'chayei sarah']},
   {slug: 'toldot', keywords: ['תולדות', 'toldot', 'toledot']},
-  {slug: 'vayetzei', keywords: ['ויצא', 'vayetzei']},
+  {slug: 'vayetze', keywords: ['ויצא', 'vayetze', 'vayetzei']},
   {slug: 'vayishlach', keywords: ['וישלח', 'vayishlach']},
   {slug: 'vayeshev', keywords: ['וישב', 'vayeshev']},
   {slug: 'miketz', keywords: ['מקץ', 'miketz']},

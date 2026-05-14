@@ -88,7 +88,7 @@ export default async function HomePage({params}: HomePageProps) {
           {getParashaDisplayName(currentParasha, locale)}
         </h2>
         <p className="mt-3 text-base leading-7 text-slate-600 sm:text-lg">
-          {currentParasha.book[locale]} · {currentParasha.torahReference}
+          {currentParasha.book[locale]}
         </p>
         <div className="mt-4 flex flex-col gap-2 text-sm text-slate-600 sm:flex-row sm:gap-6">
           <span>

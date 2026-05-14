@@ -1,11 +1,11 @@
 import type {Locale} from '@/i18n/routing';
 
 import {categories, contentItems, tags} from '../../../data/content';
-import {parashot} from '../../../data/parashot';
+import {doubleParashot, parashaBooks, parashot, routableParashot} from '../../../data/parashot';
 import type {CategoryId, ContentItem, Parasha} from './types';
 import {decodeRouteSegment} from '../routing/segments';
 
-export {categories, contentItems, parashot, tags};
+export {categories, contentItems, doubleParashot, parashaBooks, parashot, routableParashot, tags};
 
 export function getAllContent(): ContentItem[] {
   return contentItems.filter((item) => item.status === 'published');
@@ -36,7 +36,7 @@ export function getContentByCategory(category: CategoryId | string): ContentItem
 export function getParashaBySlug(slug: string): Parasha | undefined {
   const decodedSlug = decodeRouteSegment(slug);
 
-  return parashot.find(
+  return routableParashot.find(
     (parasha) =>
       parasha.id === decodedSlug ||
       parasha.slug.he === decodedSlug ||
@@ -45,10 +45,16 @@ export function getParashaBySlug(slug: string): Parasha | undefined {
 }
 
 export function getVideosForParasha(parasha: Parasha | string) {
-  const parashaId = typeof parasha === 'string' ? parasha : parasha.id;
+  const resolvedParasha =
+    typeof parasha === 'string' ? getParashaBySlug(parasha) : parasha;
+  const parashaIds = new Set(
+    resolvedParasha
+      ? [resolvedParasha.id, ...(resolvedParasha.combinedParashaIds ?? [])]
+      : [parasha as string]
+  );
 
   return getAllContent()
-    .filter((item) => item.parashaId === parashaId)
+    .filter((item) => item.parashaId && parashaIds.has(item.parashaId))
     .flatMap((item) => item.videos);
 }
 

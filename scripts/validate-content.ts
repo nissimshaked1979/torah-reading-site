@@ -143,17 +143,40 @@ async function main() {
 
 async function readParashotFromSource(): Promise<Parasha[]> {
   const source = await readFile(path.join(DATA_DIR, 'parashot.ts'), 'utf8');
-  const matches = source.matchAll(
-    /id: '([^']+)'[\s\S]*?slug: \{he: '([^']+)', en: '([^']+)'\}/g
+  const parashaMatches = source.matchAll(
+    /\{id: '([^']+)', order: [^,]+, slug: \{he: '([^']+)', en: '([^']+)'\}/g
   );
-
-  return [...matches].map((match) => ({
+  const parashot = [...parashaMatches].map((match) => ({
     id: match[1],
     slug: {
       he: match[2],
       en: match[3]
     }
   }));
+
+  const byId = new Map(parashot.map((parasha) => [parasha.id, parasha]));
+  const doubleMatches = source.matchAll(
+    /makeDoubleParasha\('([^']+)', \['([^']+)', '([^']+)'\]/g
+  );
+
+  for (const match of doubleMatches) {
+    const first = byId.get(match[2]);
+    const second = byId.get(match[3]);
+
+    if (!first || !second) {
+      continue;
+    }
+
+    parashot.push({
+      id: match[1],
+      slug: {
+        he: `${first.slug.he}-${second.slug.he}`,
+        en: `${first.slug.en}-${second.slug.en}`
+      }
+    });
+  }
+
+  return parashot;
 }
 
 main().catch((caughtError) => {

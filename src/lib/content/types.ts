@@ -43,9 +43,14 @@ export type Parasha = {
   slug: LocalizedSlug;
   title: LocalizedText;
   book: LocalizedText;
-  torahReference: string;
-  doubleWith?: string;
-  combines?: string[];
+  doubleParashaGroup?: string;
+  combinedParashaIds?: [string, string];
+};
+
+export type Sefer = {
+  id: string;
+  title: LocalizedText;
+  parashot: Array<Omit<Parasha, 'book'>>;
 };
 
 export type VideoSummary = {

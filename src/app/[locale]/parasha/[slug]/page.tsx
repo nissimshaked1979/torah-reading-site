@@ -27,8 +27,8 @@ export async function generateMetadata({
   const title = parasha?.title[locale] ?? decodedSlug;
   const description = parasha
     ? locale === 'he'
-      ? `קריאת התורה לפרשת ${title}, טעמי המקרא ונוסח ספרדי ירושלמי. ${parasha.torahReference}`
-      : `Torah reading for Parashat ${title}, Sephardic Torah reading, and Weekly Parasha. ${parasha.torahReference}`
+      ? `קריאת התורה לפרשת ${title}, טעמי המקרא ונוסח ספרדי ירושלמי.`
+      : `Torah reading for Parashat ${title}, Sephardic Torah reading, and Weekly Parasha.`
     : locale === 'he'
       ? 'עמוד פרשה לקריאת התורה ופרשת השבוע.'
       : 'Parasha page for Torah reading and Weekly Parasha.';
@@ -58,9 +58,7 @@ export default async function ParashaPage({params}: ParashaPageProps) {
   const t = await getTranslations({locale, namespace: 'ParashaPage'});
   const parasha = getParashaBySlug(decodedSlug);
   const videos = parasha ? getVideosByParasha(parasha.slug.en) : [];
-  const orderedParashot = parashot
-    .filter((item) => !item.combines)
-    .sort((a, b) => a.order - b.order);
+  const orderedParashot = parashot.sort((a, b) => a.order - b.order);
   const parashaIndex = parasha
     ? orderedParashot.findIndex((item) => item.id === parasha.id)
     : -1;
@@ -77,7 +75,7 @@ export default async function ParashaPage({params}: ParashaPageProps) {
       title={parasha?.title[locale] ?? t('title')}
       description={
         parasha
-          ? `${parasha.book[locale]} · ${parasha.torahReference}`
+          ? parasha.book[locale]
           : t('description', {slug: decodedSlug})
       }
     >
