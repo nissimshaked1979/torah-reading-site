@@ -1,7 +1,7 @@
 {
   "Site": {
     "name": "Nissim Shaked",
-    "tagline": "Torah readings, Tehillim, and prayers in Sephardic Yerushalmi nusach"
+    "tagline": "Torah reading, Tehillim, Megillot, and prayers in Sephardic Yerushalmi nusach"
   },
   "Navigation": {
     "home": "Home",
@@ -11,9 +11,9 @@
     "searchPlaceholder": "Search readings, parashot, and prayers"
   },
   "HomePage": {
-    "eyebrow": "Site foundation",
-    "title": "Jewish Reading Library",
-    "description": "Torah readings, Weekly Parasha, Tehillim, Shir Hashirim, and prayers in Sephardic Yerushalmi nusach."
+    "eyebrow": "Nissim Shaked",
+    "title": "Learning Taamei Hamikra",
+    "description": "Torah reading, Tehillim, Megillot, and prayers in Sephardic Yerushalmi nusach."
   },
   "ParashaPage": {
     "eyebrow": "Weekly portion",
