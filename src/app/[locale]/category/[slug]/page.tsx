@@ -3,6 +3,7 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 
 import {VideoGrid} from '@/components/content/VideoGrid';
+import {CategorySuggestions} from '@/components/content/CategorySuggestions';
 import {PageShell} from '@/components/layout/PageShell';
 import type {Locale} from '@/i18n/routing';
 import {categories} from '@/lib/content/repository';
@@ -85,6 +86,9 @@ export default async function CategoryPage({params}: CategoryPageProps) {
   );
 
   if (!category && !isAllVideos) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[category] Invalid category slug "${decodedSlug}" (${locale}).`);
+    }
     notFound();
   }
 
@@ -102,6 +106,10 @@ export default async function CategoryPage({params}: CategoryPageProps) {
       ? 'כל הסרטונים הזמינים באתר.'
       : 'All visible videos on the site.'
     : category?.description?.[locale] ?? t('description', {slug: decodedSlug});
+
+  if (process.env.NODE_ENV === 'development' && videos.length === 0) {
+    console.warn(`[category] Page "${decodedSlug}" loaded with 0 videos (${locale}).`);
+  }
 
   return (
     <PageShell
@@ -127,6 +135,7 @@ export default async function CategoryPage({params}: CategoryPageProps) {
             ? 'אין סרטונים זמינים בקטגוריה הזו עדיין.'
             : 'No videos are available in this category yet.'
         }
+        fallback={<CategorySuggestions locale={locale} />}
         locale={locale}
         videos={videos}
       />

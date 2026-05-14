@@ -5,11 +5,12 @@ import {VideoCard} from './VideoCard';
 
 type VideoGridProps = {
   emptyMessage: string;
+  fallback?: React.ReactNode;
   locale: Locale;
   videos: YouTubeVideo[];
 };
 
-export function VideoGrid({emptyMessage, locale, videos}: VideoGridProps) {
+export function VideoGrid({emptyMessage, fallback, locale, videos}: VideoGridProps) {
   if (videos.length === 0) {
     return (
       <div
@@ -21,6 +22,7 @@ export function VideoGrid({emptyMessage, locale, videos}: VideoGridProps) {
           {locale === 'he' ? 'לא נמצאו סרטונים' : 'No videos found'}
         </p>
         <p className="mt-2 text-sm leading-6 text-slate-600">{emptyMessage}</p>
+        {fallback ? <div className="mt-5">{fallback}</div> : null}
       </div>
     );
   }

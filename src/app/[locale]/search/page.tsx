@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 
 import {VideoGrid} from '@/components/content/VideoGrid';
+import {CategorySuggestions} from '@/components/content/CategorySuggestions';
 import {PageShell} from '@/components/layout/PageShell';
 import {SearchBar} from '@/components/navigation/SearchBar';
 import type {Locale} from '@/i18n/routing';
@@ -38,6 +39,10 @@ export default async function SearchPage({params, searchParams}: SearchPageProps
   const nav = await getTranslations({locale, namespace: 'Navigation'});
   const components = await getTranslations({locale, namespace: 'Components'});
   const videos = searchVisibleVideos(query, locale);
+
+  if (process.env.NODE_ENV === 'development' && query && videos.length === 0) {
+    console.warn(`[search] No results for query "${query}" (${locale}).`);
+  }
 
   return (
     <PageShell
@@ -86,6 +91,7 @@ export default async function SearchPage({params, searchParams}: SearchPageProps
               ? 'לא נמצאו סרטונים התואמים לחיפוש.'
               : 'No videos match this search.'
           }
+          fallback={<CategorySuggestions locale={locale} />}
           locale={locale}
           videos={videos}
         />

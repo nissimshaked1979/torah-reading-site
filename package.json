@@ -9,6 +9,7 @@
     "import:youtube": "node --experimental-strip-types scripts/import-youtube.ts",
     "update:youtube": "node --experimental-strip-types scripts/update-youtube.ts",
     "reclassify:youtube": "node --experimental-strip-types scripts/reclassify-youtube.ts",
+    "test:routes": "node --experimental-strip-types scripts/test-routes.ts",
     "validate:content": "node --experimental-strip-types scripts/validate-content.ts",
     "start": "next start",
     "lint": "eslint"
