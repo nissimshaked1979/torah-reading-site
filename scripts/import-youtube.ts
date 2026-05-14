@@ -249,13 +249,13 @@ const categoryKeywords: Record<CategoryId, string[]> = {
 };
 
 const categoryPriority: Record<CategoryId, number> = {
-  taamim: 0,
+  'shir-hashirim': 0,
+  megillot: 0,
+  taamim: 1,
   tehillim: 1,
-  'shir-hashirim': 1,
   tefilot: 1,
   haftarot: 1,
   piyutim: 1,
-  megillot: 1,
   'special-readings': 1,
   holidays: 2,
   'parashat-hashavua': 3,
