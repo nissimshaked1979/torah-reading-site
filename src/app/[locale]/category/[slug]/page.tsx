@@ -1,6 +1,6 @@
 import type {Metadata} from 'next';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
-import {notFound} from 'next/navigation';
+import {notFound, redirect} from 'next/navigation';
 
 import {VideoGrid} from '@/components/content/VideoGrid';
 import {CategorySuggestions} from '@/components/content/CategorySuggestions';
@@ -51,10 +51,10 @@ export async function generateMetadata({
 
   return buildLocalizedMetadata({
     locale,
-    path: `/category/${slug}`,
+    path: `/category/${category?.slug.en ?? slug}`,
     languagePaths: category
       ? {
-          he: `/category/${category.slug.he}`,
+          he: `/category/${category.slug.en}`,
           en: `/category/${category.slug.en}`
         }
       : isAllVideos
@@ -92,6 +92,10 @@ export default async function CategoryPage({params}: CategoryPageProps) {
     notFound();
   }
 
+  if (category && decodedSlug !== category.slug.en) {
+    redirect(`/${locale}/category/${category.slug.en}`);
+  }
+
   const videos = sortVideosForCategory(
     getVideosByCategorySlug(decodedSlug),
     decodedSlug
@@ -122,7 +126,7 @@ export default async function CategoryPage({params}: CategoryPageProps) {
           {name: locale === 'he' ? 'בית' : 'Home', path: '/'},
           {
             name: title,
-            path: `/category/${category?.slug[locale] ?? decodedSlug}`
+            path: `/category/${category?.slug.en ?? decodedSlug}`
           }
         ])}
       />

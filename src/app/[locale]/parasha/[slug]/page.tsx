@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
+import {notFound, redirect} from 'next/navigation';
 
 import {VideoGrid} from '@/components/content/VideoGrid';
 import {PageShell} from '@/components/layout/PageShell';
@@ -35,10 +36,10 @@ export async function generateMetadata({
 
   return buildLocalizedMetadata({
     locale,
-    path: `/parasha/${slug}`,
+    path: `/parasha/${parasha?.slug.en ?? slug}`,
     languagePaths: parasha
       ? {
-          he: `/parasha/${parasha.slug.he}`,
+          he: `/parasha/${parasha.slug.en}`,
           en: `/parasha/${parasha.slug.en}`
         }
       : undefined,
@@ -57,6 +58,15 @@ export default async function ParashaPage({params}: ParashaPageProps) {
 
   const t = await getTranslations({locale, namespace: 'ParashaPage'});
   const parasha = getParashaBySlug(decodedSlug);
+
+  if (!parasha) {
+    notFound();
+  }
+
+  if (decodedSlug !== parasha.slug.en) {
+    redirect(`/${locale}/parasha/${parasha.slug.en}`);
+  }
+
   const videos = parasha ? getVideosByParasha(parasha.slug.en) : [];
   const orderedParashot = parashot.sort((a, b) => a.order - b.order);
   const parashaIndex = parasha
@@ -88,7 +98,7 @@ export default async function ParashaPage({params}: ParashaPageProps) {
           },
           {
             name: parasha?.title[locale] ?? decodedSlug,
-            path: `/parasha/${parasha?.slug[locale] ?? decodedSlug}`
+            path: `/parasha/${parasha.slug.en}`
           }
         ])}
       />
@@ -106,7 +116,7 @@ export default async function ParashaPage({params}: ParashaPageProps) {
         {previousParasha ? (
           <Link
             className="text-sm font-medium text-slate-700"
-            href={`/parasha/${previousParasha.slug[locale]}`}
+            href={`/parasha/${previousParasha.slug.en}`}
           >
             {locale === 'he' ? 'הפרשה הקודמת: ' : 'Previous: '}
             {previousParasha.title[locale]}
@@ -117,7 +127,7 @@ export default async function ParashaPage({params}: ParashaPageProps) {
         {nextParasha ? (
           <Link
             className="text-sm font-medium text-slate-700"
-            href={`/parasha/${nextParasha.slug[locale]}`}
+            href={`/parasha/${nextParasha.slug.en}`}
           >
             {locale === 'he' ? 'הפרשה הבאה: ' : 'Next: '}
             {nextParasha.title[locale]}

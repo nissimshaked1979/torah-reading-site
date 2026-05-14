@@ -13,11 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const category of categories) {
     routes.push({
-      url: localizedUrl('he', `/category/${category.slug.he}`),
+      url: localizedUrl('he', `/category/${category.slug.en}`),
       lastModified: now,
       alternates: {
         languages: {
-          he: localizedUrl('he', `/category/${category.slug.he}`),
+          he: localizedUrl('he', `/category/${category.slug.en}`),
           en: localizedUrl('en', `/category/${category.slug.en}`)
         }
       }
@@ -27,7 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       alternates: {
         languages: {
-          he: localizedUrl('he', `/category/${category.slug.he}`),
+          he: localizedUrl('he', `/category/${category.slug.en}`),
           en: localizedUrl('en', `/category/${category.slug.en}`)
         }
       }
@@ -36,11 +36,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const parasha of parashot) {
     routes.push({
-      url: localizedUrl('he', `/parasha/${parasha.slug.he}`),
+      url: localizedUrl('he', `/parasha/${parasha.slug.en}`),
       lastModified: now,
       alternates: {
         languages: {
-          he: localizedUrl('he', `/parasha/${parasha.slug.he}`),
+          he: localizedUrl('he', `/parasha/${parasha.slug.en}`),
           en: localizedUrl('en', `/parasha/${parasha.slug.en}`)
         }
       }
@@ -50,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       alternates: {
         languages: {
-          he: localizedUrl('he', `/parasha/${parasha.slug.he}`),
+          he: localizedUrl('he', `/parasha/${parasha.slug.en}`),
           en: localizedUrl('en', `/parasha/${parasha.slug.en}`)
         }
       }

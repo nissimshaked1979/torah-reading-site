@@ -30,11 +30,11 @@ async function main() {
     ...localized('/search?q=%D7%AA%D7%94%D7%99%D7%9C%D7%99%D7%9D'),
     ...localized('/category/all'),
     ...categories.flatMap((category) => [
-      {path: `/he/category/${category.slug.he}`},
+      {path: `/he/category/${category.slug.en}`},
       {path: `/en/category/${category.slug.en}`}
     ]),
     ...parashot.slice(0, 3).flatMap((parasha) => [
-      {path: `/he/parasha/${parasha.slug.he}`},
+      {path: `/he/parasha/${parasha.slug.en}`},
       {path: `/en/parasha/${parasha.slug.en}`}
     ])
   ];

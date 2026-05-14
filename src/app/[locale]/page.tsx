@@ -82,7 +82,7 @@ export default async function HomePage({params}: HomePageProps) {
               </Link>
               <Link
                 className="inline-flex justify-center rounded-md border border-white/40 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10"
-                href={`/parasha/${currentParasha.slug[locale]}`}
+                href={`/parasha/${currentParasha.slug.en}`}
               >
                 {locale === 'he' ? 'פרשת השבוע' : 'Weekly Parasha'}
               </Link>
@@ -119,7 +119,7 @@ export default async function HomePage({params}: HomePageProps) {
         {visibleCategories.map((category) => (
           <CategoryCard
             description={category.description?.[locale] ?? ''}
-            href={`/category/${category.slug[locale]}`}
+            href={`/category/${category.slug.en}`}
             icon={categoryIcon(category.id)}
             key={category.id}
             tone={categoryTone(category.id)}
@@ -157,7 +157,7 @@ export default async function HomePage({params}: HomePageProps) {
         </div>
         <Link
           className="mt-5 inline-flex rounded-md bg-[#071735] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#8f3f2d]"
-          href={`/parasha/${currentParasha.slug[locale]}`}
+          href={`/parasha/${currentParasha.slug.en}`}
         >
           {locale === 'he' ? 'לעמוד הפרשה המלא' : 'Open full parasha page'}
         </Link>

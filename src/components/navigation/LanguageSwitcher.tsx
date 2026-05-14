@@ -34,7 +34,7 @@ export function LanguageSwitcher({label}: LanguageSwitcherProps) {
                 ? 'rounded-md bg-[#f1c66d] px-3 py-2 font-bold text-[#071735]'
                 : 'rounded-md px-3 py-2 font-semibold text-[#d8e0f4] transition hover:bg-white/10 hover:text-[#f1c66d]'
             }
-            href={getLocalizedPathname(pathname, option.locale)}
+            href={getLocalizedPathname(pathname)}
             key={option.locale}
             locale={option.locale}
           >
@@ -46,7 +46,7 @@ export function LanguageSwitcher({label}: LanguageSwitcherProps) {
   );
 }
 
-function getLocalizedPathname(pathname: string, locale: Locale): string {
+function getLocalizedPathname(pathname: string): string {
   const segments = pathname.split('/').filter(Boolean);
   const [section, slug] = segments;
 
@@ -59,7 +59,7 @@ function getLocalizedPathname(pathname: string, locale: Locale): string {
         item.slug.en === decodedSlug
     );
 
-    return category ? `/category/${category.slug[locale]}` : pathname;
+    return category ? `/category/${category.slug.en}` : pathname;
   }
 
   if (section === 'parasha' && slug) {
@@ -71,7 +71,7 @@ function getLocalizedPathname(pathname: string, locale: Locale): string {
         item.slug.en === decodedSlug
     );
 
-    return parasha ? `/parasha/${parasha.slug[locale]}` : pathname;
+    return parasha ? `/parasha/${parasha.slug.en}` : pathname;
   }
 
   return pathname;

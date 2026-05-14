@@ -77,6 +77,14 @@ type Parasha = {
   };
 };
 
+type CategorySource = {
+  id: string;
+  slug: {
+    he: string;
+    en: string;
+  };
+};
+
 async function readJson<T>(fileName: string): Promise<T> {
   const raw = await readFile(path.join(DATA_DIR, fileName), 'utf8');
   return JSON.parse(raw) as T;
@@ -93,6 +101,7 @@ function error(message: string) {
 async function main() {
   const videos = await readJson<Video[]>('youtube-videos.json');
   const overrides = await readJson<ManualOverridesFile>('manual-overrides.json');
+  const categories = await readCategoriesFromSource();
   const parashot = await readParashotFromSource();
   const validParashaSlugs = new Set(
     parashot.flatMap((parasha) => [parasha.id, parasha.slug.he, parasha.slug.en])
@@ -104,6 +113,14 @@ async function main() {
   const visibleCategoryCounts = new Map<string, number>();
   const warnings: string[] = [];
   const errors: string[] = [];
+
+  for (const category of categories) {
+    validateRouteSlug(`category ${category.id}`, category.slug.en, errors);
+  }
+
+  for (const parasha of parashot) {
+    validateRouteSlug(`parasha ${parasha.id}`, parasha.slug.en, errors);
+  }
 
   for (const video of videos) {
     if (!video.videoId) {
@@ -322,6 +339,32 @@ function hebrewNumeralToNumber(value: string): number | undefined {
 
 function clampTehillimChapter(value: number | undefined): number | undefined {
   return value && value >= 1 && value <= 150 ? value : undefined;
+}
+
+function validateRouteSlug(label: string, slug: string, errors: string[]) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    errors.push(`Route slug for ${label} is not URL-safe ASCII kebab-case: "${slug}".`);
+  }
+
+  if (/[\u0590-\u05ff]/.test(slug)) {
+    errors.push(`Route slug for ${label} contains Hebrew characters: "${slug}".`);
+  }
+}
+
+async function readCategoriesFromSource(): Promise<CategorySource[]> {
+  const source = await readFile(path.join(DATA_DIR, 'content.ts'), 'utf8');
+  const categoryBlock = source.match(/export const categories: Category\[] = \[([\s\S]*?)\];/);
+  const categoryMatches = categoryBlock?.[1].matchAll(
+    /id: '([^']+)',[\s\S]*?slug: \{he: '([^']+)', en: '([^']+)'\}/g
+  );
+
+  return [...(categoryMatches ?? [])].map((match) => ({
+    id: match[1],
+    slug: {
+      he: match[2],
+      en: match[3]
+    }
+  }));
 }
 
 async function readParashotFromSource(): Promise<Parasha[]> {
