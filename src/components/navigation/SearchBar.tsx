@@ -29,7 +29,7 @@ export function SearchBar({
         {label}
       </label>
       <input
-        className="min-w-0 flex-1 rounded-md border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-700"
+        className="min-w-0 flex-1 rounded-md border border-[#d8ad55]/40 bg-white px-3 py-2.5 text-base text-[#071735] shadow-sm outline-none transition placeholder:text-[#7c86a1] focus:border-[#d8ad55]"
         dir={getDirection(locale)}
         id={id}
         name="q"
@@ -39,7 +39,7 @@ export function SearchBar({
       />
       <button
         aria-label={buttonLabel}
-        className="rounded-md bg-slate-950 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-900"
+        className="rounded-md bg-[#d8ad55] px-4 py-2.5 text-sm font-bold text-[#071735] shadow-sm transition hover:bg-[#f1c66d]"
         type="submit"
       >
         {buttonLabel}

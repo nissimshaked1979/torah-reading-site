@@ -11,11 +11,11 @@ export async function Footer({locale}: FooterProps) {
   const footer = await getTranslations({locale, namespace: 'Footer'});
 
   return (
-    <footer className="border-t border-amber-200/70 bg-white/95">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 text-sm leading-6 text-slate-600 sm:px-6 lg:px-8">
-        <span className="font-bold text-slate-950">{site('name')}</span>
-        <span>{site('tagline')}</span>
-        <span className="text-slate-500">{footer('copyright')}</span>
+    <footer className="mt-8 border-t border-[#d8ad55]/30 bg-[#071735] text-[#d8e0f4]">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-10 text-sm leading-6 sm:px-6 lg:px-8">
+        <span className="text-lg font-bold text-white">{site('name')}</span>
+        <span className="max-w-2xl">{site('tagline')}</span>
+        <span className="text-[#f1c66d]">{footer('copyright')}</span>
       </div>
     </footer>
   );

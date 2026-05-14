@@ -2,8 +2,8 @@
 
 :root {
   color-scheme: light;
-  background: #f7f3ea;
-  color: #1f2933;
+  background: #f4ead7;
+  color: #172033;
 }
 
 * {
@@ -18,10 +18,26 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(247, 243, 234, 0.96)),
-    #f7f3ea;
-  color: #1f2933;
+    radial-gradient(circle at 14% 8%, rgba(185, 124, 45, 0.18), transparent 28rem),
+    radial-gradient(circle at 88% 0%, rgba(35, 58, 112, 0.16), transparent 30rem),
+    linear-gradient(135deg, rgba(255, 251, 241, 0.92), rgba(244, 234, 215, 0.97)),
+    #f4ead7;
+  color: #172033;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(45deg, rgba(31, 48, 86, 0.035) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(31, 48, 86, 0.035) 25%, transparent 25%);
+  background-position: 0 0, 0 12px;
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, #000, transparent 72%);
 }
 
 [dir="rtl"] body {
@@ -54,4 +70,34 @@ a {
 
 .skip-link:focus {
   transform: translateY(0);
+}
+
+.torah-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(218, 175, 94, 0.34);
+  background:
+    linear-gradient(120deg, rgba(9, 24, 58, 0.92), rgba(20, 47, 101, 0.84)),
+    radial-gradient(circle at 18% 20%, rgba(224, 184, 94, 0.38), transparent 18rem);
+}
+
+.torah-hero::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.25;
+}
+
+.torah-hero::after {
+  position: absolute;
+  inset-block: auto -38px;
+  inset-inline: 8%;
+  height: 110px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(218, 175, 94, 0.35), transparent);
+  filter: blur(24px);
 }

@@ -16,7 +16,7 @@ export async function Header({locale}: HeaderProps) {
   const components = await getTranslations({locale, namespace: 'Components'});
 
   return (
-    <header className="border-b border-amber-200/70 bg-white/95 shadow-sm">
+    <header className="border-b border-[#d8ad55]/40 bg-[#071735] text-white shadow-[0_18px_45px_rgba(7,23,53,0.18)]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link
@@ -24,10 +24,10 @@ export async function Header({locale}: HeaderProps) {
             className="group space-y-1 rounded-md"
             href="/"
           >
-            <span className="block text-xl font-bold text-slate-950 transition group-hover:text-amber-900">
+            <span className="block text-2xl font-bold tracking-wide text-white transition group-hover:text-[#f1c66d]">
               {site('name')}
             </span>
-            <span className="block max-w-xl text-sm leading-6 text-slate-600">
+            <span className="block max-w-xl text-sm leading-6 text-[#d8e0f4]">
               {site('tagline')}
             </span>
           </Link>
@@ -38,11 +38,11 @@ export async function Header({locale}: HeaderProps) {
             aria-label={locale === 'he' ? 'ניווט ראשי' : 'Primary navigation'}
             className="flex flex-wrap gap-2"
           >
-            <Link className="rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-amber-50 hover:text-amber-950" href="/">
+            <Link className="rounded-md px-3 py-2 text-sm font-bold text-[#e8eefb] transition hover:bg-white/10 hover:text-[#f1c66d]" href="/">
               {nav('home')}
             </Link>
             <Link
-              className="rounded-md px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-amber-50 hover:text-amber-950"
+              className="rounded-md px-3 py-2 text-sm font-bold text-[#e8eefb] transition hover:bg-white/10 hover:text-[#f1c66d]"
               href="/category/all"
             >
               {nav('categories')}

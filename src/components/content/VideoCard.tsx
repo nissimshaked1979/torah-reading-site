@@ -29,13 +29,13 @@ export function VideoCard({
   const resolvedHref = video ? `/video/${video.videoId}` : href;
 
   const content = (
-    <article className="group h-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md">
-      <div className="relative flex aspect-video items-center justify-center bg-slate-100">
+    <article className="group h-full overflow-hidden rounded-xl border border-[#d8ad55]/25 bg-white shadow-[0_12px_30px_rgba(28,37,65,0.08)] transition hover:-translate-y-1 hover:border-[#d8ad55] hover:shadow-[0_20px_46px_rgba(28,37,65,0.16)]">
+      <div className="relative flex aspect-video items-center justify-center bg-[#e8dcc6]">
         {resolvedThumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             alt=""
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
             loading="lazy"
             src={resolvedThumbnail}
           />
@@ -44,16 +44,16 @@ export function VideoCard({
             {locale === 'he' ? 'תמונת וידאו תופיע כאן' : 'Video thumbnail'}
           </span>
         )}
-        <span className="absolute bottom-3 inline-flex rounded-full bg-slate-950/90 px-3 py-1 text-xs font-bold text-white ltr:right-3 rtl:left-3">
+        <span className="absolute bottom-3 inline-flex rounded-full bg-[#071735]/90 px-3 py-1 text-xs font-bold text-[#f1c66d] ltr:right-3 rtl:left-3">
           YouTube
         </span>
       </div>
       <div className="space-y-3 p-5">
-        <h2 className="text-lg font-bold leading-snug text-slate-950 group-hover:text-amber-950">
+        <h2 className="text-lg font-bold leading-snug text-[#071735] group-hover:text-[#8f3f2d]">
           {resolvedTitle}
         </h2>
         {resolvedDescription ? (
-          <p className="line-clamp-3 text-sm leading-6 text-slate-600 sm:text-base">
+          <p className="line-clamp-3 text-sm leading-6 text-[#4b5875] sm:text-base">
             {resolvedDescription}
           </p>
         ) : null}
