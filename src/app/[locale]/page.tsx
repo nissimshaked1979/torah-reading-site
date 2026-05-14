@@ -204,7 +204,7 @@ function categoryIcon(categoryId: string): string {
     haftarot: 'ה',
     piyutim: '♪',
     taamim: 'ט',
-    megillot: 'מ',
+    megillot: 'א',
     'special-readings': 'ק'
   };
 

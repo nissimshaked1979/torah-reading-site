@@ -84,26 +84,16 @@ export const categories: Category[] = [
   {
     id: 'megillot',
     order: 9,
-    slug: {he: 'מגילות', en: 'megillot'},
-    title: {he: 'מגילות', en: 'Megillot'},
+    slug: {he: 'מגילת-אסתר', en: 'megillat-esther'},
+    title: {he: 'מגילת אסתר', en: 'Megillat Esther'},
     description: {
-      he: 'קריאות ולימוד מגילות.',
-      en: 'Megillot readings and learning.'
-    }
-  },
-  {
-    id: 'special-readings',
-    order: 10,
-    slug: {he: 'קריאות-מיוחדות', en: 'special-readings'},
-    title: {he: 'קריאות מיוחדות', en: 'Special Readings'},
-    description: {
-      he: 'ראש חודש, תעניות, ויחל משה וקריאות מיוחדות.',
-      en: 'Rosh Chodesh, fast days, Vayechal Moshe, and special readings.'
+      he: 'קריאת מגילת אסתר ולימוד טעמי המגילה.',
+      en: 'Megillat Esther readings and trope learning.'
     }
   },
   {
     id: 'other',
-    order: 11,
+    order: 10,
     slug: {he: 'אחר', en: 'other'},
     title: {he: 'אחר', en: 'Other'},
     description: {

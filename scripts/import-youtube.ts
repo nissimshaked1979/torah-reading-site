@@ -197,33 +197,19 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'טעמי המקרא',
     'לוח טעמים',
     'סימוני ידיים',
-    'טעמי מגילת אסתר',
     'cantillation',
     'taamim',
     'trope'
   ],
   megillot: [
     'מגילת אסתר',
-    'esther',
-    'שיר השירים',
-    'shir hashirim',
-    'song of songs',
-    'song of solomon'
+    'טעמי מגילת אסתר',
+    'megillat esther',
+    'megilas esther',
+    'book of esther',
+    'esther'
   ],
-  'special-readings': [
-    'ראש חודש',
-    'תענית ציבור',
-    'ויחל משה',
-    'הפטרה',
-    'הפטרת',
-    'הפטרות',
-    'rosh chodesh',
-    'taanit',
-    'taanis',
-    'haftara',
-    'haftarah',
-    'haftarot'
-  ],
+  'special-readings': [],
   holidays: [
     'חג',
     'פסח',
@@ -243,7 +229,16 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'chanukah',
     'purim',
     'shavuot',
-    'holiday'
+    'holiday',
+    'ראש חודש',
+    'תענית ציבור',
+    'תענית',
+    'ויחל משה',
+    'rosh chodesh',
+    'taanit',
+    'taanis',
+    'vayechal moshe',
+    'vaychal moshe'
   ],
   other: []
 };
@@ -561,10 +556,18 @@ export function classifyVideo(title: string, description: string) {
   }
 
   return {
-    category: primaryCategory?.category ?? ('other' as CategoryId),
+    category: primaryCategory?.category ?? fallbackCategoryForTitle(title),
     parashaSlug: null,
     matchedKeywords: primaryCategory?.matches ?? []
   };
+}
+
+function fallbackCategoryForTitle(title: string): CategoryId {
+  return jewishReadingKeywords.some((keyword) =>
+    title.toLowerCase().includes(keyword.toLowerCase())
+  )
+    ? 'holidays'
+    : 'other';
 }
 
 export function shouldHideVideo(

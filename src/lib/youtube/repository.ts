@@ -25,6 +25,37 @@ const irrelevantKeywords = [
   '#shorts',
   '/shorts/'
 ];
+const holidayKeywords = [
+  'חג',
+  'מועד',
+  'פסח',
+  'סוכות',
+  'ראש השנה',
+  'יום כיפור',
+  'כיפור',
+  'חנוכה',
+  'פורים',
+  'שבועות',
+  'ראש חודש',
+  'תענית ציבור',
+  'תענית',
+  'ויחל משה',
+  'pesach',
+  'passover',
+  'sukkot',
+  'rosh hashanah',
+  'yom kippur',
+  'hanukkah',
+  'chanukah',
+  'purim',
+  'shavuot',
+  'rosh chodesh',
+  'taanit',
+  'taanis',
+  'vayechal moshe',
+  'vaychal moshe',
+  'holiday'
+];
 
 export function getAllVideos(): YouTubeVideo[] {
   return getVisibleVideos();
@@ -38,8 +69,14 @@ export function getVisibleVideos(): YouTubeVideo[] {
 }
 
 export function getVideosByCategory(category: string): YouTubeVideo[] {
+  const videos = getVisibleVideos().filter((video) =>
+    category === 'holidays'
+      ? video.category === 'holidays' || isHolidayRelatedVideo(video)
+      : video.category === category
+  );
+
   return sortVideosForCategory(
-    getVisibleVideos().filter((video) => video.category === category),
+    dedupeVideos(videos),
     category
   );
 }
@@ -245,6 +282,14 @@ function isIrrelevantVideo(video: YouTubeVideo): boolean {
   );
 
   return irrelevantKeywords.some((keyword) => text.includes(keyword.toLowerCase()));
+}
+
+function isHolidayRelatedVideo(video: YouTubeVideo): boolean {
+  const text = normalizeText(
+    `${video.title.source}\n${video.title.he}\n${video.title.en}\n${video.description}\n${video.tags.join(' ')}`
+  );
+
+  return holidayKeywords.some((keyword) => text.includes(keyword.toLowerCase()));
 }
 
 function makeExcerpt(value: string): string {

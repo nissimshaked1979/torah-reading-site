@@ -15,7 +15,9 @@ const VALID_CATEGORIES = new Set([
   'holidays',
   'other'
 ]);
-const PUBLIC_CATEGORY_IDS = [...VALID_CATEGORIES];
+const PUBLIC_CATEGORY_IDS = [...VALID_CATEGORIES].filter(
+  (category) => !['special-readings', 'other'].includes(category)
+);
 
 const IRRELEVANT_KEYWORDS = [
   'lego',
