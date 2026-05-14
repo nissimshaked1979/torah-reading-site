@@ -8,13 +8,44 @@ const VALID_CATEGORIES = new Set([
   'shir-hashirim',
   'tefilot',
   'haftarot',
+  'piyutim',
+  'taamim',
+  'megillot',
+  'special-readings',
   'holidays',
   'other'
 ]);
 
+const IRRELEVANT_KEYWORDS = [
+  'lego',
+  'לגו',
+  'ninja',
+  "נינג'ה",
+  'נינג׳ה',
+  'ניסוי',
+  'כרוב',
+  'לימון',
+  'led',
+  'birthday',
+  'יום הולדת',
+  'סבא',
+  'מילואים',
+  'פוליטי',
+  'shorts',
+  '#shorts',
+  '/shorts/'
+];
+
 type Video = {
   videoId?: string;
   category?: string;
+  hidden?: boolean;
+  title?: {
+    source?: string;
+    he?: string;
+    en?: string;
+  };
+  description?: string;
   parashaSlug?: string | null;
   slug?: {
     he?: string;
@@ -64,16 +95,41 @@ async function main() {
     parashot.flatMap((parasha) => [parasha.id, parasha.slug.he, parasha.slug.en])
   );
   const videoIds = new Set(videos.map((video) => video.videoId).filter(Boolean));
+  const seenVideoIds = new Set<string>();
+  const seenContent = new Map<string, string>();
   const warnings: string[] = [];
   const errors: string[] = [];
 
   for (const video of videos) {
     if (!video.videoId) {
       errors.push('Imported video is missing videoId.');
+    } else if (seenVideoIds.has(video.videoId)) {
+      warnings.push(`Duplicate videoId "${video.videoId}".`);
+    } else {
+      seenVideoIds.add(video.videoId);
     }
 
     if (video.category && !VALID_CATEGORIES.has(video.category)) {
       errors.push(`Invalid imported category "${video.category}" on ${video.videoId}.`);
+    }
+
+    if (!video.hidden && isIrrelevantVideo(video)) {
+      warnings.push(`Irrelevant video is not hidden: ${video.videoId}.`);
+    }
+
+    const contentKey = normalizeText(
+      `${video.title?.source ?? video.title?.he ?? video.title?.en ?? ''}\n${video.description ?? ''}`
+    );
+    const duplicateOf = seenContent.get(contentKey);
+    if (contentKey && duplicateOf && duplicateOf !== video.videoId) {
+      warnings.push(`Duplicate title/description on "${duplicateOf}" and "${video.videoId}".`);
+    } else if (contentKey && video.videoId) {
+      seenContent.set(contentKey, video.videoId);
+    }
+
+    const cardExcerpt = makeCardExcerpt(video.description ?? '');
+    if (cardExcerpt.length > 160) {
+      warnings.push(`Card description excerpt is too long on ${video.videoId}.`);
     }
 
     if (video.parashaSlug && !validParashaSlugs.has(video.parashaSlug)) {
@@ -140,6 +196,22 @@ async function main() {
   if (errors.length > 0) {
     process.exitCode = 1;
   }
+}
+
+function isIrrelevantVideo(video: Video): boolean {
+  const text = `${video.title?.source ?? ''}\n${video.title?.he ?? ''}\n${video.title?.en ?? ''}\n${video.description ?? ''}`.toLowerCase();
+
+  return IRRELEVANT_KEYWORDS.some((keyword) => text.includes(keyword.toLowerCase()));
+}
+
+function normalizeText(value: string): string {
+  return value.replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function makeCardExcerpt(value: string): string {
+  const cleaned = normalizeText(value).replace(/\byoutube\b/gi, '').trim();
+
+  return cleaned.length <= 160 ? cleaned : `${cleaned.slice(0, 157).trimEnd()}...`;
 }
 
 async function readParashotFromSource(): Promise<Parasha[]> {

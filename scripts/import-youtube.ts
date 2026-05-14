@@ -15,6 +15,10 @@ export type CategoryId =
   | 'shir-hashirim'
   | 'tefilot'
   | 'haftarot'
+  | 'piyutim'
+  | 'taamim'
+  | 'megillot'
+  | 'special-readings'
   | 'holidays'
   | 'other';
 
@@ -129,6 +133,25 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'song of solomon'
   ],
   tefilot: [
+    'קבלת שבת',
+    'kabbalat shabbat',
+    'kabalat shabbat',
+    'הבדלה',
+    'havdala',
+    'איגרת הרמב"ן',
+    'איגרת הרמבן',
+    'iggeret haramban',
+    'עשר זכירות',
+    'eser zechirot',
+    'שלוש עשרה עיקרים',
+    '13 principles',
+    'principles of faith',
+    'יג מידות',
+    'י״ג מידות',
+    'שלוש עשרה מידות',
+    'shelosh esreh middot',
+    'פסוקי דזמרא',
+    'ברכות לפני ואחרי ההפטרה',
     'תפילה',
     'תפילת',
     'תפילות',
@@ -169,6 +192,38 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'haftarot',
     'haftaroth'
   ],
+  piyutim: ['דרור יקרא', 'dror yikra', 'חביבי', 'havivi', 'פיוט', 'piyut', 'piyutim'],
+  taamim: [
+    'טעמי המקרא',
+    'לוח טעמים',
+    'סימוני ידיים',
+    'טעמי מגילת אסתר',
+    'cantillation',
+    'taamim',
+    'trope'
+  ],
+  megillot: [
+    'מגילת אסתר',
+    'esther',
+    'שיר השירים',
+    'shir hashirim',
+    'song of songs',
+    'song of solomon'
+  ],
+  'special-readings': [
+    'ראש חודש',
+    'תענית ציבור',
+    'ויחל משה',
+    'הפטרה',
+    'הפטרת',
+    'הפטרות',
+    'rosh chodesh',
+    'taanit',
+    'taanis',
+    'haftara',
+    'haftarah',
+    'haftarot'
+  ],
   holidays: [
     'חג',
     'פסח',
@@ -194,14 +249,54 @@ const categoryKeywords: Record<CategoryId, string[]> = {
 };
 
 const categoryPriority: Record<CategoryId, number> = {
+  taamim: 0,
   tehillim: 1,
   'shir-hashirim': 1,
   tefilot: 1,
   haftarot: 1,
+  piyutim: 1,
+  megillot: 1,
+  'special-readings': 1,
   holidays: 2,
   'parashat-hashavua': 3,
   other: 4
 };
+
+const irrelevantKeywords = [
+  'lego',
+  'לגו',
+  'ninja',
+  "נינג'ה",
+  'נינג׳ה',
+  'ניסוי',
+  'כרוב',
+  'לימון',
+  'led',
+  'birthday',
+  'יום הולדת',
+  'סבא',
+  'מילואים',
+  'פוליטי',
+  'shorts',
+  '#shorts',
+  '/shorts/'
+];
+
+const jewishReadingKeywords = [
+  'תורה',
+  'מקרא',
+  'קריאה',
+  'בר מצווה',
+  'בר-מצווה',
+  'ספרדי ירושלמי',
+  'נוסח',
+  'torah',
+  'jewish',
+  'sephardic',
+  'yerushalmi',
+  'bar mitzvah',
+  'reading'
+];
 
 const parashaSlugKeywords: Array<{slug: string; keywords: string[]}> = [
   {slug: 'bereshit', keywords: ['בראשית', 'bereshit', 'bereishit', 'genesis']},
@@ -436,8 +531,8 @@ export function classifyVideo(title: string, description: string) {
     .filter(({matches}) => matches.length > 0)
     .sort(
       (a, b) =>
-        b.matches.length - a.matches.length ||
-        categoryPriority[a.category] - categoryPriority[b.category]
+        categoryPriority[a.category] - categoryPriority[b.category] ||
+        b.matches.length - a.matches.length
     );
   const primaryCategory = titleCategoryMatches[0];
   const titleParashaMatch = parashaSlugKeywords.find(({keywords}) =>
@@ -470,6 +565,26 @@ export function classifyVideo(title: string, description: string) {
     parashaSlug: null,
     matchedKeywords: primaryCategory?.matches ?? []
   };
+}
+
+export function shouldHideVideo(
+  title: string,
+  description: string,
+  category: CategoryId
+): boolean {
+  const text = `${title}\n${description}`.toLowerCase();
+
+  if (irrelevantKeywords.some((keyword) => text.includes(keyword.toLowerCase()))) {
+    return true;
+  }
+
+  if (category !== 'other') {
+    return false;
+  }
+
+  return !jewishReadingKeywords.some((keyword) =>
+    text.includes(keyword.toLowerCase())
+  );
 }
 
 export function defaultTags(
@@ -524,7 +639,9 @@ export function toImportedVideo(
     nusach: override?.nusach ?? null,
     displayOrder: override?.displayOrder ?? null,
     featured: override?.featured ?? false,
-    hidden: override?.hidden ?? false,
+    hidden:
+      override?.hidden === true ||
+      shouldHideVideo(video.snippet.title, video.snippet.description, category),
     classification: {
       automaticCategory: automatic.category,
       matchedKeywords: automatic.matchedKeywords,

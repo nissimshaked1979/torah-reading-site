@@ -1,6 +1,9 @@
 import type {Locale} from '@/i18n/routing';
 import {Link} from '@/i18n/navigation';
-import {getBestThumbnail} from '@/lib/youtube/repository';
+import {
+  getBestThumbnail,
+  getVideoCardDescription
+} from '@/lib/youtube/repository';
 import type {YouTubeVideo} from '@/lib/youtube/types';
 
 type VideoCardProps = {
@@ -21,7 +24,7 @@ export function VideoCard({
   video
 }: VideoCardProps) {
   const resolvedTitle = video ? video.title[locale] : title;
-  const resolvedDescription = video?.description ?? description;
+  const resolvedDescription = video ? getVideoCardDescription(video) : description;
   const resolvedThumbnail = video ? getBestThumbnail(video) : thumbnailUrl;
   const resolvedHref = video ? `/video/${video.videoId}` : href;
 

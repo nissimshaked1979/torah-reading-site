@@ -62,8 +62,48 @@ export const categories: Category[] = [
     }
   },
   {
-    id: 'other',
+    id: 'piyutim',
     order: 7,
+    slug: {he: 'פיוטים', en: 'piyutim'},
+    title: {he: 'פיוטים', en: 'Piyutim'},
+    description: {
+      he: 'פיוטים ומסורות שירה בנוסח ספרדי ירושלמי.',
+      en: 'Piyutim and Sephardic Yerushalmi melodies.'
+    }
+  },
+  {
+    id: 'taamim',
+    order: 8,
+    slug: {he: 'טעמי-המקרא', en: 'taamei-hamikra'},
+    title: {he: 'טעמי המקרא', en: 'Taamei Hamikra'},
+    description: {
+      he: 'לימוד טעמי המקרא, סימוני ידיים ולוחות טעמים.',
+      en: 'Cantillation, taamim, hand signs, and trope learning.'
+    }
+  },
+  {
+    id: 'megillot',
+    order: 9,
+    slug: {he: 'מגילות', en: 'megillot'},
+    title: {he: 'מגילות', en: 'Megillot'},
+    description: {
+      he: 'קריאות ולימוד מגילות.',
+      en: 'Megillot readings and learning.'
+    }
+  },
+  {
+    id: 'special-readings',
+    order: 10,
+    slug: {he: 'קריאות-מיוחדות', en: 'special-readings'},
+    title: {he: 'קריאות מיוחדות', en: 'Special Readings'},
+    description: {
+      he: 'ראש חודש, תעניות, ויחל משה וקריאות מיוחדות.',
+      en: 'Rosh Chodesh, fast days, Vayechal Moshe, and special readings.'
+    }
+  },
+  {
+    id: 'other',
+    order: 11,
     slug: {he: 'אחר', en: 'other'},
     title: {he: 'אחר', en: 'Other'},
     description: {

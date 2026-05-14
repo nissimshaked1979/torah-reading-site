@@ -15,7 +15,11 @@ import {
 import {categories} from '@/lib/content/repository';
 import {JsonLd, buildWebsiteJsonLd} from '@/lib/seo/jsonld';
 import {buildLocalizedMetadata} from '@/lib/seo/metadata';
-import {getLatestVideos, getVideosByParasha} from '@/lib/youtube/repository';
+import {
+  getLatestVideos,
+  getVideosByCategory,
+  getVideosByParasha
+} from '@/lib/youtube/repository';
 
 type HomePageProps = {
   params: Promise<{locale: Locale}>;
@@ -50,6 +54,9 @@ export default async function HomePage({params}: HomePageProps) {
   const previousParasha = getPreviousParasha(currentParasha);
   const nextParasha = getNextParasha(currentParasha);
   const currentParashaVideos = getVideosByParasha(currentParasha.slug.en);
+  const visibleCategories = categories.filter(
+    (category) => category.id !== 'other' || getVideosByCategory(category.id).length > 0
+  );
 
   return (
     <PageShell
@@ -63,7 +70,7 @@ export default async function HomePage({params}: HomePageProps) {
           {locale === 'he' ? 'קטגוריות קריאה' : 'Reading Categories'}
         </h2>
         <div className="grid w-full gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((category) => (
+        {visibleCategories.map((category) => (
           <CategoryCard
             description={category.description?.[locale] ?? ''}
             href={`/category/${category.slug[locale]}`}

@@ -10,6 +10,10 @@ export type ContentKind =
   | 'shir_hashirim'
   | 'tefilot'
   | 'haftarot'
+  | 'piyutim'
+  | 'taamim'
+  | 'megillot'
+  | 'special-readings'
   | 'holiday'
   | 'other'
   | 'video';
@@ -22,6 +26,10 @@ export type CategoryId =
   | 'shir-hashirim'
   | 'tefilot'
   | 'haftarot'
+  | 'piyutim'
+  | 'taamim'
+  | 'megillot'
+  | 'special-readings'
   | 'holidays'
   | 'other';
 

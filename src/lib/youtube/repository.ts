@@ -5,11 +5,30 @@ import type {ManualOverridesFile, YouTubeVideo} from './types';
 
 const youtubeVideos = youtubeVideosJson as YouTubeVideo[];
 const manualOverrides = manualOverridesJson as ManualOverridesFile;
+const irrelevantKeywords = [
+  'lego',
+  'לגו',
+  'ninja',
+  "נינג'ה",
+  'נינג׳ה',
+  'ניסוי',
+  'כרוב',
+  'לימון',
+  'led',
+  'birthday',
+  'יום הולדת',
+  'סבא',
+  'מילואים',
+  'פוליטי',
+  'shorts',
+  '#shorts',
+  '/shorts/'
+];
 
 export function getAllVideos(): YouTubeVideo[] {
-  return youtubeVideos
+  return dedupeVideos(youtubeVideos)
     .map(applyManualOverride)
-    .filter((video) => !video.hidden)
+    .filter(isPublicVideo)
     .sort(compareVideos);
 }
 
@@ -84,6 +103,59 @@ export function getBestThumbnail(video: YouTubeVideo): string | undefined {
     video.thumbnails.medium?.url ??
     video.thumbnails.default?.url
   );
+}
+
+export function getVideoCardDescription(video: YouTubeVideo): string {
+  return makeExcerpt(video.description);
+}
+
+function dedupeVideos(videos: YouTubeVideo[]): YouTubeVideo[] {
+  const seenIds = new Set<string>();
+  const seenContent = new Set<string>();
+  const unique: YouTubeVideo[] = [];
+
+  for (const video of videos) {
+    const contentKey = normalizeText(`${video.title.source}\n${video.description}`);
+
+    if (seenIds.has(video.videoId) || seenContent.has(contentKey)) {
+      continue;
+    }
+
+    seenIds.add(video.videoId);
+    seenContent.add(contentKey);
+    unique.push(video);
+  }
+
+  return unique;
+}
+
+function isPublicVideo(video: YouTubeVideo): boolean {
+  return !video.hidden && !isIrrelevantVideo(video);
+}
+
+function isIrrelevantVideo(video: YouTubeVideo): boolean {
+  const text = normalizeText(
+    `${video.title.source}\n${video.title.he}\n${video.title.en}\n${video.description}\n${video.watchUrl}`
+  );
+
+  return irrelevantKeywords.some((keyword) => text.includes(keyword.toLowerCase()));
+}
+
+function makeExcerpt(value: string): string {
+  const cleaned = collapseWhitespace(value)
+    .replace(/\byoutube\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return cleaned.length <= 160 ? cleaned : `${cleaned.slice(0, 157).trimEnd()}...`;
+}
+
+function normalizeText(value: string): string {
+  return collapseWhitespace(value).toLowerCase();
+}
+
+function collapseWhitespace(value: string): string {
+  return value.replace(/\s+/g, ' ').trim();
 }
 
 export function applyManualOverride(video: YouTubeVideo): YouTubeVideo {

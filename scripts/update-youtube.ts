@@ -108,7 +108,7 @@ async function updateYouTubeVideos() {
     }
   }
 
-  const mergedVideos = sortVideos([...mergedById.values()]);
+  const mergedVideos = sortVideos(dedupeVideos([...mergedById.values()]));
   const newCount = freshVideos.filter((video) => !existingById.has(video.videoId)).length;
   const updatedCount = freshVideos.length - newCount;
 
@@ -119,6 +119,30 @@ async function updateYouTubeVideos() {
   console.log(`Existing videos updated: ${updatedCount}`);
   console.log(`Total videos saved: ${mergedVideos.length}`);
   logClassificationCounts(mergedVideos);
+}
+
+function dedupeVideos(videos: ImportedVideo[]): ImportedVideo[] {
+  const seenIds = new Set<string>();
+  const seenContent = new Set<string>();
+  const unique: ImportedVideo[] = [];
+
+  for (const video of videos) {
+    const contentKey = normalizeText(`${video.title.source}\n${video.description}`);
+
+    if (seenIds.has(video.videoId) || seenContent.has(contentKey)) {
+      continue;
+    }
+
+    seenIds.add(video.videoId);
+    seenContent.add(contentKey);
+    unique.push(video);
+  }
+
+  return unique;
+}
+
+function normalizeText(value: string): string {
+  return value.replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
 updateYouTubeVideos().catch((error) => {
