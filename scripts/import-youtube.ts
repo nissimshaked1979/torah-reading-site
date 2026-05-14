@@ -121,6 +121,8 @@ const categoryKeywords: Record<CategoryId, string[]> = {
   tehillim: ['תהילים', 'תהלים', 'מזמור', 'tehillim', 'psalm', 'psalms'],
   'shir-hashirim': [
     'שיר השירים',
+    'מגילת שיר השירים',
+    'מגילת  שיר השירים',
     'shir hashirim',
     'song of songs',
     'song of solomon'
@@ -360,7 +362,8 @@ function findKeywordMatches(text: string, keywords: string[]): string[] {
 }
 
 export function classifyVideo(title: string, description: string) {
-  const text = `${title}\n${description}`;
+  void description;
+
   const titleCategoryMatches = Object.entries(categoryKeywords)
     .map(([category, keywords]) => ({
       category: category as CategoryId,
@@ -368,32 +371,19 @@ export function classifyVideo(title: string, description: string) {
     }))
     .filter(({matches}) => matches.length > 0)
     .sort((a, b) => b.matches.length - a.matches.length);
-  const categoryMatches = Object.entries(categoryKeywords)
-    .map(([category, keywords]) => ({
-      category: category as CategoryId,
-      matches: findKeywordMatches(text, keywords)
-    }))
-    .filter(({matches}) => matches.length > 0)
-    .sort((a, b) => b.matches.length - a.matches.length);
-  const primaryCategory = titleCategoryMatches[0] ?? categoryMatches[0];
+  const primaryCategory = titleCategoryMatches[0];
   const titleParashaMatch = parashaSlugKeywords.find(({keywords}) =>
     findKeywordMatches(title, keywords).length
   );
-  const textParashaMatch = parashaSlugKeywords.find(({keywords}) =>
-    findKeywordMatches(text, keywords).length
-  );
-  const parashaMatch =
-    titleParashaMatch ??
-    (primaryCategory?.category === 'parashat-hashavua' ? textParashaMatch : undefined);
 
-  if (parashaMatch) {
+  if (titleParashaMatch) {
     return {
       category: 'parashat-hashavua' as CategoryId,
-      parashaSlug: parashaMatch.slug,
+      parashaSlug: titleParashaMatch.slug,
       matchedKeywords: [
         ...new Set([
-          ...(categoryMatches[0]?.matches ?? []),
-          ...findKeywordMatches(text, parashaMatch.keywords)
+          ...(primaryCategory?.matches ?? []),
+          ...findKeywordMatches(title, titleParashaMatch.keywords)
         ])
       ]
     };
