@@ -72,6 +72,60 @@ a {
   transform: translateY(0);
 }
 
+.dedication-banner {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dedication-track {
+  display: inline-flex;
+  min-width: max-content;
+  gap: 3rem;
+  padding-block: 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  animation: dedication-scroll 34s linear infinite;
+}
+
+.dedication-track span {
+  display: inline-flex;
+  align-items: center;
+}
+
+@keyframes dedication-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+
+[dir="rtl"] .dedication-track {
+  animation-name: dedication-scroll-rtl;
+}
+
+@keyframes dedication-scroll-rtl {
+  from {
+    transform: translateX(-33.333%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dedication-track {
+    animation: none;
+    transform: none;
+  }
+}
+
 .torah-hero {
   position: relative;
   overflow: hidden;

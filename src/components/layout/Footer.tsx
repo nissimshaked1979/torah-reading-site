@@ -16,6 +16,12 @@ export async function Footer({locale}: FooterProps) {
         <span className="text-lg font-bold text-white">{site('name')}</span>
         <span className="max-w-2xl">{site('tagline')}</span>
         <span className="text-[#f1c66d]">{footer('copyright')}</span>
+        <a
+          className="mx-auto mt-2 inline-flex rounded-full border border-white/10 px-4 py-1.5 text-xs font-medium text-[#b9c4dc] transition hover:border-[#f1c66d]/50 hover:text-[#f1c66d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f1c66d]"
+          href="mailto:nissim.shakeded@gmail.com"
+        >
+          nissim.shakeded@gmail.com
+        </a>
       </div>
     </footer>
   );

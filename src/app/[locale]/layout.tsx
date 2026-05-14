@@ -6,6 +6,7 @@ import {notFound} from 'next/navigation';
 import {Suspense} from 'react';
 
 import {AnalyticsEvents} from '@/components/analytics/AnalyticsEvents';
+import {DedicationBanner} from '@/components/layout/DedicationBanner';
 import {Footer} from '@/components/layout/Footer';
 import {Header} from '@/components/layout/Header';
 import {routing, type Locale} from '@/i18n/routing';
@@ -54,6 +55,7 @@ export default async function LocaleLayout({
             <a className="skip-link" href="#main-content">
               {typedLocale === 'he' ? 'דלג לתוכן המרכזי' : 'Skip to content'}
             </a>
+            <DedicationBanner />
             <Header locale={typedLocale} />
             <main
               className="mx-auto flex w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-12"
