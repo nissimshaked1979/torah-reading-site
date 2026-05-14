@@ -9,7 +9,8 @@ export function DedicationBanner() {
   return (
     <section
       aria-label={text}
-      className="dedication-banner border-b border-[#d8ad55]/40 bg-[#09183a] text-[#f8e7b0]"
+      className="dedication-banner border-b border-[#d8ad55]/45 bg-[#f8e7b0] text-[#071735]"
+      dir="rtl"
     >
       <span className="sr-only">{text}</span>
       <div aria-hidden="true" className="dedication-track">

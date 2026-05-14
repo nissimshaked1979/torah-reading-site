@@ -43,9 +43,15 @@ export async function Header({locale}: HeaderProps) {
             </Link>
             <Link
               className="rounded-md px-3 py-2 text-sm font-bold text-[#e8eefb] transition hover:bg-white/10 hover:text-[#f1c66d]"
-              href="/category/all"
+              href="/category/parashat-hashavua"
             >
-              {nav('categories')}
+              {nav('parasha')}
+            </Link>
+            <Link
+              className="rounded-md px-3 py-2 text-sm font-bold text-[#e8eefb] transition hover:bg-white/10 hover:text-[#f1c66d]"
+              href="/search"
+            >
+              {nav('search')}
             </Link>
           </nav>
           <SearchBar
