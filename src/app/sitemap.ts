@@ -60,22 +60,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const video of getAllVideos()) {
     const modified = video.publishedAt ? new Date(video.publishedAt) : now;
     routes.push({
-      url: localizedUrl('he', `/watch/${video.videoId}`),
+      url: localizedUrl('he', `/video/${video.videoId}`),
       lastModified: modified,
       alternates: {
         languages: {
-          he: localizedUrl('he', `/watch/${video.videoId}`),
-          en: localizedUrl('en', `/watch/${video.videoId}`)
+          he: localizedUrl('he', `/video/${video.videoId}`),
+          en: localizedUrl('en', `/video/${video.videoId}`)
         }
       }
     });
     routes.push({
-      url: localizedUrl('en', `/watch/${video.videoId}`),
+      url: localizedUrl('en', `/video/${video.videoId}`),
       lastModified: modified,
       alternates: {
         languages: {
-          he: localizedUrl('he', `/watch/${video.videoId}`),
-          en: localizedUrl('en', `/watch/${video.videoId}`)
+          he: localizedUrl('he', `/video/${video.videoId}`),
+          en: localizedUrl('en', `/video/${video.videoId}`)
         }
       }
     });

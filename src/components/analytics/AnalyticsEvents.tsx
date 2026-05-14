@@ -29,7 +29,7 @@ function getRouteType(pathname: string) {
     return 'search_page_visit';
   }
 
-  if (/^\/(he|en)\/watch\//.test(pathname)) {
+  if (/^\/(he|en)\/(video|watch)\//.test(pathname)) {
     return 'video_page_visit';
   }
 

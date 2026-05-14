@@ -23,7 +23,7 @@ export function VideoCard({
   const resolvedTitle = video ? video.title[locale] : title;
   const resolvedDescription = video?.description ?? description;
   const resolvedThumbnail = video ? getBestThumbnail(video) : thumbnailUrl;
-  const resolvedHref = video ? `/${locale}/watch/${video.videoId}` : href;
+  const resolvedHref = video ? `/video/${video.videoId}` : href;
 
   const content = (
     <article className="group h-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md">
