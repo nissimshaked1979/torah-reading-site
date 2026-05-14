@@ -13,17 +13,6 @@ import {
 import {loadLocalEnv} from './load-local-env.ts';
 
 const OUTPUT_PATH = path.join(process.cwd(), 'data', 'youtube-videos.json');
-const CURATION_FIELDS = [
-  'category',
-  'subcategory',
-  'slug',
-  'parashaSlug',
-  'tags',
-  'nusach',
-  'displayOrder',
-  'featured',
-  'hidden'
-] as const;
 
 async function readExistingVideos(): Promise<ImportedVideo[]> {
   try {
@@ -46,7 +35,7 @@ function mergeVideo(
     return fresh;
   }
 
-  const merged: ImportedVideo = {
+  return {
     ...existing,
     ...fresh,
     title: {
@@ -65,14 +54,6 @@ function mergeVideo(
         fresh.classification.manualOverrideApplied
     }
   };
-
-  for (const field of CURATION_FIELDS) {
-    if (existing[field] !== undefined && existing[field] !== null) {
-      Object.assign(merged, {[field]: existing[field]});
-    }
-  }
-
-  return merged;
 }
 
 function sortVideos(videos: ImportedVideo[]): ImportedVideo[] {

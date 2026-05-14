@@ -9,7 +9,7 @@ const OUTPUT_PATH = path.join(process.cwd(), 'data', 'youtube-videos.json');
 const OVERRIDES_PATH = path.join(process.cwd(), 'data', 'manual-overrides.json');
 const MAX_RETRIES = 3;
 
-type CategoryId =
+export type CategoryId =
   | 'parashat-hashavua'
   | 'tehillim'
   | 'shir-hashirim'
@@ -22,7 +22,7 @@ type LocaleText = {
   en?: string;
 };
 
-type ManualOverride = {
+export type ManualOverride = {
   category?: CategoryId;
   subcategory?: string | null;
   title?: LocaleText;
@@ -35,7 +35,7 @@ type ManualOverride = {
   hidden?: boolean;
 };
 
-type ManualOverridesFile = {
+export type ManualOverridesFile = {
   videos?: Record<string, ManualOverride>;
 };
 
@@ -359,8 +359,15 @@ function findKeywordMatches(text: string, keywords: string[]): string[] {
   return keywords.filter((keyword) => normalized.includes(keyword.toLowerCase()));
 }
 
-function classifyVideo(title: string, description: string) {
+export function classifyVideo(title: string, description: string) {
   const text = `${title}\n${description}`;
+  const titleCategoryMatches = Object.entries(categoryKeywords)
+    .map(([category, keywords]) => ({
+      category: category as CategoryId,
+      matches: findKeywordMatches(title, keywords)
+    }))
+    .filter(({matches}) => matches.length > 0)
+    .sort((a, b) => b.matches.length - a.matches.length);
   const categoryMatches = Object.entries(categoryKeywords)
     .map(([category, keywords]) => ({
       category: category as CategoryId,
@@ -368,9 +375,16 @@ function classifyVideo(title: string, description: string) {
     }))
     .filter(({matches}) => matches.length > 0)
     .sort((a, b) => b.matches.length - a.matches.length);
-  const parashaMatch = parashaSlugKeywords.find(({keywords}) =>
+  const primaryCategory = titleCategoryMatches[0] ?? categoryMatches[0];
+  const titleParashaMatch = parashaSlugKeywords.find(({keywords}) =>
+    findKeywordMatches(title, keywords).length
+  );
+  const textParashaMatch = parashaSlugKeywords.find(({keywords}) =>
     findKeywordMatches(text, keywords).length
   );
+  const parashaMatch =
+    titleParashaMatch ??
+    (primaryCategory?.category === 'parashat-hashavua' ? textParashaMatch : undefined);
 
   if (parashaMatch) {
     return {
@@ -386,13 +400,16 @@ function classifyVideo(title: string, description: string) {
   }
 
   return {
-    category: categoryMatches[0]?.category ?? ('other' as CategoryId),
+    category: primaryCategory?.category ?? ('other' as CategoryId),
     parashaSlug: null,
-    matchedKeywords: categoryMatches[0]?.matches ?? []
+    matchedKeywords: primaryCategory?.matches ?? []
   };
 }
 
-function defaultTags(category: CategoryId, parashaSlug: string | null): string[] {
+export function defaultTags(
+  category: CategoryId,
+  parashaSlug: string | null
+): string[] {
   const tags: string[] = [category];
 
   if (parashaSlug) {
