@@ -14,6 +14,7 @@ export type CategoryId =
   | 'tehillim'
   | 'shir-hashirim'
   | 'tefilot'
+  | 'haftarot'
   | 'holidays'
   | 'other';
 
@@ -131,6 +132,12 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'תפילה',
     'תפילת',
     'תפילות',
+    'מנחה',
+    'ערבית',
+    'שחרית',
+    'מוסף',
+    'קדיש',
+    'סליחות',
     'ברכה',
     'ברכת',
     'שמע ישראל',
@@ -138,8 +145,24 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'tefila',
     'tefilah',
     'tefilot',
+    'mincha',
+    'arvit',
+    'maariv',
+    'shacharit',
+    'mussaf',
+    'kaddish',
+    'selichot',
     'blessing',
     'shema'
+  ],
+  haftarot: [
+    'הפטרה',
+    'הפטרת',
+    'הפטרות',
+    'haftara',
+    'haftarah',
+    'haftarot',
+    'haftaroth'
   ],
   holidays: [
     'חג',
@@ -163,6 +186,16 @@ const categoryKeywords: Record<CategoryId, string[]> = {
     'holiday'
   ],
   other: []
+};
+
+const categoryPriority: Record<CategoryId, number> = {
+  tehillim: 1,
+  'shir-hashirim': 1,
+  tefilot: 1,
+  haftarot: 1,
+  holidays: 2,
+  'parashat-hashavua': 3,
+  other: 4
 };
 
 const parashaSlugKeywords: Array<{slug: string; keywords: string[]}> = [
@@ -358,7 +391,33 @@ export async function readManualOverrides(): Promise<ManualOverridesFile> {
 function findKeywordMatches(text: string, keywords: string[]): string[] {
   const normalized = text.toLowerCase();
 
-  return keywords.filter((keyword) => normalized.includes(keyword.toLowerCase()));
+  return keywords.filter((keyword) =>
+    containsKeyword(normalized, keyword.toLowerCase())
+  );
+}
+
+function containsKeyword(text: string, keyword: string): boolean {
+  if (hasHebrew(keyword)) {
+    return new RegExp(
+      `(^|[^\\u0590-\\u05ff])${escapeRegExp(keyword)}($|[^\\u0590-\\u05ff])`
+    ).test(text);
+  }
+
+  if (/^[a-z0-9]+$/i.test(keyword)) {
+    return new RegExp(`(^|[^a-z0-9])${escapeRegExp(keyword)}($|[^a-z0-9])`, 'i').test(
+      text
+    );
+  }
+
+  return text.includes(keyword);
+}
+
+function hasHebrew(value: string): boolean {
+  return /[\u0590-\u05ff]/.test(value);
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 export function classifyVideo(title: string, description: string) {
@@ -370,11 +429,23 @@ export function classifyVideo(title: string, description: string) {
       matches: findKeywordMatches(title, keywords)
     }))
     .filter(({matches}) => matches.length > 0)
-    .sort((a, b) => b.matches.length - a.matches.length);
+    .sort(
+      (a, b) =>
+        b.matches.length - a.matches.length ||
+        categoryPriority[a.category] - categoryPriority[b.category]
+    );
   const primaryCategory = titleCategoryMatches[0];
   const titleParashaMatch = parashaSlugKeywords.find(({keywords}) =>
     findKeywordMatches(title, keywords).length
   );
+
+  if (primaryCategory && primaryCategory.category !== 'parashat-hashavua') {
+    return {
+      category: primaryCategory.category,
+      parashaSlug: null,
+      matchedKeywords: primaryCategory.matches
+    };
+  }
 
   if (titleParashaMatch) {
     return {

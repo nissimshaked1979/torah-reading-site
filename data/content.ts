@@ -52,8 +52,18 @@ export const categories: Category[] = [
     }
   },
   {
-    id: 'other',
+    id: 'haftarot',
     order: 6,
+    slug: {he: 'הפטרות', en: 'haftarot'},
+    title: {he: 'הפטרות', en: 'Haftarot'},
+    description: {
+      he: 'קריאות הפטרה והכנה להפטרות.',
+      en: 'Haftarah readings and preparation.'
+    }
+  },
+  {
+    id: 'other',
+    order: 7,
     slug: {he: 'אחר', en: 'other'},
     title: {he: 'אחר', en: 'Other'},
     description: {
@@ -315,8 +325,8 @@ export const contentItems: ContentItem[] = [
   {
     id: 'haftarah-introduction',
     slug: {he: 'מבוא-להפטרה', en: 'haftarah-introduction'},
-    kind: 'other',
-    categoryId: 'other',
+    kind: 'haftarot',
+    categoryId: 'haftarot',
     title: {he: 'מבוא להפטרה', en: 'Haftarah Introduction'},
     tagIds: ['torah-reading'],
     status: 'published',

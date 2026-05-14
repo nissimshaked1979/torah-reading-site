@@ -7,6 +7,7 @@ const VALID_CATEGORIES = new Set([
   'tehillim',
   'shir-hashirim',
   'tefilot',
+  'haftarot',
   'holidays',
   'other'
 ]);
