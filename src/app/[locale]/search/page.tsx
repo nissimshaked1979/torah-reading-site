@@ -4,7 +4,6 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {VideoGrid} from '@/components/content/VideoGrid';
 import {CategorySuggestions} from '@/components/content/CategorySuggestions';
 import {PageShell} from '@/components/layout/PageShell';
-import {SearchBar} from '@/components/navigation/SearchBar';
 import type {Locale} from '@/i18n/routing';
 import {buildLocalizedMetadata} from '@/lib/seo/metadata';
 import {searchVisibleVideos} from '@/lib/youtube/repository';
@@ -36,8 +35,6 @@ export default async function SearchPage({params, searchParams}: SearchPageProps
   setRequestLocale(locale);
 
   const page = await getTranslations({locale, namespace: 'SearchPage'});
-  const nav = await getTranslations({locale, namespace: 'Navigation'});
-  const components = await getTranslations({locale, namespace: 'Components'});
   const videos = searchVisibleVideos(query, locale);
 
   if (process.env.NODE_ENV === 'development' && query && videos.length === 0) {
@@ -50,14 +47,6 @@ export default async function SearchPage({params, searchParams}: SearchPageProps
       title={page('title')}
       description={page('description')}
     >
-      <SearchBar
-        locale={locale}
-        label={nav('search')}
-        placeholder={nav('searchPlaceholder')}
-        buttonLabel={components('searchButton')}
-        id="page-search"
-        defaultValue={query}
-      />
       <section className="space-y-4" aria-labelledby="search-results-heading">
         <div className="flex flex-col gap-1">
           <h2

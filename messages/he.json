@@ -6,7 +6,7 @@
   "Navigation": {
     "home": "בית",
     "parasha": "פרשה",
-    "categories": "קטגוריות",
+    "categories": "כל התוכן",
     "search": "חיפוש",
     "searchPlaceholder": "חיפוש קריאות, פרשות ותפילות"
   },
@@ -28,7 +28,7 @@
   "SearchPage": {
     "eyebrow": "חיפוש",
     "title": "חיפוש באתר",
-    "description": "עמוד זמני לחיפוש בתוכן האתר."
+    "description": "השתמש בשורת החיפוש העליונה כדי למצוא קריאות, פרשות ותפילות."
   },
   "Footer": {
     "copyright": "כל הזכויות שמורות."

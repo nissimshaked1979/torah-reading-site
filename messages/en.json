@@ -6,7 +6,7 @@
   "Navigation": {
     "home": "Home",
     "parasha": "Parasha",
-    "categories": "Categories",
+    "categories": "All Content",
     "search": "Search",
     "searchPlaceholder": "Search readings, parashot, and prayers"
   },
@@ -28,7 +28,7 @@
   "SearchPage": {
     "eyebrow": "Search",
     "title": "Site Search",
-    "description": "Temporary search page for the content library."
+    "description": "Use the search bar above to find readings, parashot, and prayers."
   },
   "Footer": {
     "copyright": "All rights reserved."
