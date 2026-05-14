@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
+import {notFound} from 'next/navigation';
 
 import {VideoGrid} from '@/components/content/VideoGrid';
 import {PageShell} from '@/components/layout/PageShell';
@@ -8,7 +9,10 @@ import {categories} from '@/lib/content/repository';
 import {decodeRouteSegment} from '@/lib/routing/segments';
 import {JsonLd, buildBreadcrumbJsonLd} from '@/lib/seo/jsonld';
 import {buildLocalizedMetadata} from '@/lib/seo/metadata';
-import {getVideosByCategory} from '@/lib/youtube/repository';
+import {
+  getVideosByCategorySlug,
+  sortVideosForCategory
+} from '@/lib/youtube/repository';
 
 type CategoryPageProps = {
   params: Promise<{
@@ -22,20 +26,27 @@ export async function generateMetadata({
 }: CategoryPageProps): Promise<Metadata> {
   const {locale, slug} = await params;
   const decodedSlug = decodeRouteSegment(slug);
+  const isAllVideos = decodedSlug === 'all';
   const category = categories.find(
     (item) =>
       item.id === decodedSlug ||
       item.slug.he === decodedSlug ||
       item.slug.en === decodedSlug
   );
-  const title =
-    category?.title[locale] ??
-    (locale === 'he' ? 'קטגוריית קריאות' : 'Reading Category');
-  const description =
-    category?.description?.[locale] ??
-    (locale === 'he'
-      ? 'קטגוריית תוכן לקריאות תורה, תהילים, תפילות ומועדים.'
-      : 'Content category for Torah reading, Tehillim, prayers, and holidays.');
+  const title = isAllVideos
+    ? locale === 'he'
+      ? 'כל הסרטונים'
+      : 'All Videos'
+    : category?.title[locale] ??
+      (locale === 'he' ? 'קטגוריית קריאות' : 'Reading Category');
+  const description = isAllVideos
+    ? locale === 'he'
+      ? 'כל הסרטונים הזמינים באתר.'
+      : 'All visible videos on the site.'
+    : category?.description?.[locale] ??
+      (locale === 'he'
+        ? 'קטגוריית תוכן לקריאות תורה, תהילים, תפילות ומועדים.'
+        : 'Content category for Torah reading, Tehillim, prayers, and holidays.');
 
   return buildLocalizedMetadata({
     locale,
@@ -45,7 +56,12 @@ export async function generateMetadata({
           he: `/category/${category.slug.he}`,
           en: `/category/${category.slug.en}`
         }
-      : undefined,
+      : isAllVideos
+        ? {
+            he: '/category/all',
+            en: '/category/all'
+          }
+        : undefined,
     title:
       locale === 'he'
         ? `${title} | קריאת התורה`
@@ -57,6 +73,7 @@ export async function generateMetadata({
 export default async function CategoryPage({params}: CategoryPageProps) {
   const {locale, slug} = await params;
   const decodedSlug = decodeRouteSegment(slug);
+  const isAllVideos = decodedSlug === 'all';
   setRequestLocale(locale);
 
   const t = await getTranslations({locale, namespace: 'CategoryPage'});
@@ -66,25 +83,44 @@ export default async function CategoryPage({params}: CategoryPageProps) {
       item.slug.he === decodedSlug ||
       item.slug.en === decodedSlug
   );
-  const videos = category ? getVideosByCategory(category.id) : [];
+
+  if (!category && !isAllVideos) {
+    notFound();
+  }
+
+  const videos = sortVideosForCategory(
+    getVideosByCategorySlug(decodedSlug),
+    decodedSlug
+  );
+  const title = isAllVideos
+    ? locale === 'he'
+      ? 'כל הסרטונים'
+      : 'All Videos'
+    : category?.title[locale] ?? t('title');
+  const description = isAllVideos
+    ? locale === 'he'
+      ? 'כל הסרטונים הזמינים באתר.'
+      : 'All visible videos on the site.'
+    : category?.description?.[locale] ?? t('description', {slug: decodedSlug});
 
   return (
     <PageShell
       eyebrow={t('eyebrow')}
-      title={category?.title[locale] ?? t('title')}
-      description={
-        category?.description?.[locale] ?? t('description', {slug: decodedSlug})
-      }
+      title={title}
+      description={description}
     >
       <JsonLd
         data={buildBreadcrumbJsonLd(locale, [
           {name: locale === 'he' ? 'בית' : 'Home', path: '/'},
           {
-            name: category?.title[locale] ?? decodedSlug,
+            name: title,
             path: `/category/${category?.slug[locale] ?? decodedSlug}`
           }
         ])}
       />
+      <p className="text-sm font-semibold text-slate-600" aria-live="polite">
+        {locale === 'he' ? `${videos.length} סרטונים` : `${videos.length} videos`}
+      </p>
       <VideoGrid
         emptyMessage={
           locale === 'he'

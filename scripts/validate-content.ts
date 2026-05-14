@@ -15,6 +15,7 @@ const VALID_CATEGORIES = new Set([
   'holidays',
   'other'
 ]);
+const PUBLIC_CATEGORY_IDS = [...VALID_CATEGORIES];
 
 const IRRELEVANT_KEYWORDS = [
   'lego',
@@ -97,6 +98,8 @@ async function main() {
   const videoIds = new Set(videos.map((video) => video.videoId).filter(Boolean));
   const seenVideoIds = new Set<string>();
   const seenContent = new Map<string, string>();
+  const visibleVideos = videos.filter((video) => !video.hidden && !isIrrelevantVideo(video));
+  const visibleCategoryCounts = new Map<string, number>();
   const warnings: string[] = [];
   const errors: string[] = [];
 
@@ -115,6 +118,14 @@ async function main() {
 
     if (!video.hidden && isIrrelevantVideo(video)) {
       warnings.push(`Irrelevant video is not hidden: ${video.videoId}.`);
+    }
+
+    if (!video.hidden && video.category === 'tehillim' && !extractTehillimChapter(video)) {
+      warnings.push(`Tehillim video has no detected chapter number: ${video.videoId}.`);
+    }
+
+    if (!video.hidden && video.category === 'parashat-hashavua' && !video.parashaSlug) {
+      warnings.push(`Parasha video has no parasha slug: ${video.videoId}.`);
     }
 
     const contentKey = normalizeText(
@@ -136,6 +147,27 @@ async function main() {
       errors.push(
         `Invalid imported parasha slug "${video.parashaSlug}" on ${video.videoId}.`
       );
+    }
+  }
+
+  for (const video of visibleVideos) {
+    if (video.category) {
+      visibleCategoryCounts.set(
+        video.category,
+        (visibleCategoryCounts.get(video.category) ?? 0) + 1
+      );
+    }
+
+    if (video.hidden || isIrrelevantVideo(video)) {
+      warnings.push(`Hidden or irrelevant video appears in public helper input: ${video.videoId}.`);
+    }
+  }
+
+  if (videos.length > 0) {
+    for (const category of PUBLIC_CATEGORY_IDS) {
+      if (category !== 'other' && !visibleCategoryCounts.has(category)) {
+        warnings.push(`Category link may point to an empty category: ${category}.`);
+      }
     }
   }
 
@@ -212,6 +244,82 @@ function makeCardExcerpt(value: string): string {
   const cleaned = normalizeText(value).replace(/\byoutube\b/gi, '').trim();
 
   return cleaned.length <= 160 ? cleaned : `${cleaned.slice(0, 157).trimEnd()}...`;
+}
+
+function extractTehillimChapter(video: Video): number | undefined {
+  const text = normalizeForSearch(
+    `${video.title?.source ?? ''} ${video.title?.he ?? ''} ${video.title?.en ?? ''} ${video.description ?? ''}`
+  );
+  const directMatch = text.match(
+    /\b(?:tehillim|psalm|psalms)\s*(?:chapter|chap\.?|פרק)?\s*(\d{1,3})\b/i
+  );
+
+  if (directMatch) {
+    return clampTehillimChapter(Number(directMatch[1]));
+  }
+
+  const hebrewMatch = text.match(/תהילים\s*(?:פרק)?\s*([א-ת]{1,5}|\d{1,3})/);
+
+  if (!hebrewMatch) {
+    return undefined;
+  }
+
+  const chapter = /^\d+$/.test(hebrewMatch[1])
+    ? Number(hebrewMatch[1])
+    : hebrewNumeralToNumber(hebrewMatch[1]);
+
+  return clampTehillimChapter(chapter);
+}
+
+function normalizeForSearch(value: string): string {
+  return value
+    .normalize('NFKD')
+    .replace(/[\u0591-\u05c7]/g, '')
+    .replace(/[״"׳']/g, '')
+    .replace(/[ך]/g, 'כ')
+    .replace(/[ם]/g, 'מ')
+    .replace(/[ן]/g, 'נ')
+    .replace(/[ף]/g, 'פ')
+    .replace(/[ץ]/g, 'צ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+function hebrewNumeralToNumber(value: string): number | undefined {
+  const numerals: Record<string, number> = {
+    א: 1,
+    ב: 2,
+    ג: 3,
+    ד: 4,
+    ה: 5,
+    ו: 6,
+    ז: 7,
+    ח: 8,
+    ט: 9,
+    י: 10,
+    כ: 20,
+    ל: 30,
+    מ: 40,
+    נ: 50,
+    ס: 60,
+    ע: 70,
+    פ: 80,
+    צ: 90,
+    ק: 100,
+    ר: 200
+  };
+  let total = 0;
+
+  for (const letter of normalizeForSearch(value)) {
+    total += numerals[letter] ?? 0;
+  }
+
+  return total || undefined;
+}
+
+function clampTehillimChapter(value: number | undefined): number | undefined {
+  return value && value >= 1 && value <= 150 ? value : undefined;
 }
 
 async function readParashotFromSource(): Promise<Parasha[]> {

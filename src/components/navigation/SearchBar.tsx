@@ -7,6 +7,7 @@ type SearchBarProps = {
   label: string;
   placeholder: string;
   buttonLabel: string;
+  defaultValue?: string;
 };
 
 export function SearchBar({
@@ -14,7 +15,8 @@ export function SearchBar({
   locale,
   label,
   placeholder,
-  buttonLabel
+  buttonLabel,
+  defaultValue = ''
 }: SearchBarProps) {
   return (
     <form
@@ -32,6 +34,7 @@ export function SearchBar({
         id={id}
         name="q"
         placeholder={placeholder}
+        defaultValue={defaultValue}
         type="search"
       />
       <button
