@@ -24,6 +24,8 @@ type HomePageProps = {
   params: Promise<{locale: Locale}>;
 };
 
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params
 }: HomePageProps): Promise<Metadata> {
